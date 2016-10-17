@@ -9,6 +9,6 @@ exports.courseByProvider = function (req, res) {
 }
 
 exports.filteredCourses = function (req, res) {
-	//Get contents
+	console.log()
 	res.send('allCourses');
 }
