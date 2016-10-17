@@ -1,5 +1,4 @@
-# 2016-09-mvp
-## MOOC Searcher
+# MOOC Searcher
 
 ## What Does This App Do? ##
   This app is a search engine for online courses
