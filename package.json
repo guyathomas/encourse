@@ -25,9 +25,11 @@
   "dependencies": {
     "babel-preset-react": "^6.16.0",
     "babelify": "^7.3.0",
+    "express": "^4.14.0",
     "react": "^15.3.2",
     "react-bootstrap": "^0.30.5",
-    "react-dom": "^15.3.2"
+    "react-dom": "^15.3.2",
+    "relevance": "^1.0.5"
   },
   "babel": {
     "presets": [
@@ -35,6 +37,7 @@
     ]
   },
   "devDependencies": {
-    "live-server": "^1.1.0"
+    "live-server": "^1.1.0",
+    "nodemon": "^1.11.0"
   }
 }
