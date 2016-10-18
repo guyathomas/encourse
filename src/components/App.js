@@ -21,8 +21,8 @@ class App extends React.Component {
 		return (
 			<div>
 				<div className="jumbotron">
-					<h1>What do you want to learn?</h1>
-					<Search updateResults={this.updateResults.bind(this)}/>
+					<h1>Learn More, In Less Time</h1>
+					<Search updateResults={this.updateResults.bind(this)} className="jumbo-search" />
 				</div>
 				<Prefs />
 				<Results results={this.state.filteredResults}/>
