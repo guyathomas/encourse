@@ -2,6 +2,7 @@ var rp = require('request-promise');
 var Course = require('../db/models/course.js')
 
 exports.fetchUdacity = function() {
+	//Get the data from Udacities API and convert into format for our database
 	 rp('https://www.udacity.com/public-api/v0/courses')
 	 .then(function(body) {
 	 	var courseArr = [];
@@ -22,6 +23,7 @@ exports.fetchUdacity = function() {
 	 	//Delete from the database where shortCourse.source = Udacity
 	 	Course.find({source:"udacity"}).remove().exec();
 	 	
+	 	//Add new results into the database
 	 	for (var i = 0; i < courseArr.length; i++) {
 	 		Course.create(courseArr[i], function(err, course) {
 	 			if (err) {
@@ -29,18 +31,8 @@ exports.fetchUdacity = function() {
 	 			}
 	 		})
 	 	}
-
-	 	//Create new modelss in the DB for each of the items in courseArr
-	 	// console.log(courseArr);
 	 })
 	 .catch(function(err) {
 	 	console.log('there was an error', err);
 	 })
-
 }
-
-
-// Tank.create({ size: 'small' }, function (err, small) {
-//   if (err) return handleError(err);
-//   // saved!
-// })

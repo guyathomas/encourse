@@ -5,6 +5,7 @@ var db = require('../db.js');
 var courseSchema = new mongoose.Schema({
 	title: String,
 	description: String,
+	// fullDescription: String, this is to ensure more relevant search results
 	link: String,
 	difficulty: String,
 	duration: Number

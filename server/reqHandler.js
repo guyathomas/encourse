@@ -3,6 +3,8 @@ var Course = require('../db/models/course.js')
 var relevance = require('relevance');
 var utilities = require('./utilities.js')
 
+var heapdump = require('heapdump');
+
 // var defaultCorsHeaders = {
 //   'access-control-allow-origin': '*',
 //   'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
@@ -22,10 +24,21 @@ exports.courseByProvider = function (req, res) {
 
 exports.filteredCourses = function (req, res) {
 	// utilities.fetchUdacity();
-	var searchQuery = req.body.searchQuery
-	var splitQuery = searchQuery.trim().split(' ')
-	Course.find()
+	process.kill(process.pid, 'SIGUSR2');
+	var searchQuery = req.body.searchQuery;
+	var splitQuery = searchQuery.trim().split(' ');
+	
+	//Create regex for the query
+	var regexQuery = splitQuery.join("|");
+	var re = new RegExp(regexQuery, 'ig');
+
+	//Query with the regex
+	Course.find({ $or: [
+		{'description': re},
+		{'title': re}
+		]})
 	.then(function(results){
+		process.kill(process.pid, 'SIGUSR2');
 		return relevance({
 			query: splitQuery,
 			data: results,
@@ -36,6 +49,13 @@ exports.filteredCourses = function (req, res) {
 		});
 	})
 	.then(function(results){
+		process.kill(process.pid, 'SIGUSR2');
 		res.send(JSON.stringify(results.slice(0,18)));
 	})
 }
+
+// User.find( { $or:[ {'_id':objId}, {'name':param}, {'nickname':param} ]}, 
+//   function(err,docs){
+//     if(!err) res.send(docs);
+// });
+
