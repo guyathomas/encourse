@@ -5,7 +5,6 @@ var db = require('../db.js');
 var courseSchema = new mongoose.Schema({
 	title: String,
 	description: String,
-	image: String,
 	link: String,
 	difficulty: String,
 	duration: Number
