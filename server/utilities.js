@@ -20,15 +20,12 @@ exports.fetchUdacity = function() {
 	 })
 	 .then(function(courseArr) {
 	 	//Delete from the database where shortCourse.source = Udacity
-	 	console.log('before', Course.find())
 	 	Course.find({source:"udacity"}).remove().exec();
 	 	
 	 	for (var i = 0; i < courseArr.length; i++) {
 	 		Course.create(courseArr[i], function(err, course) {
 	 			if (err) {
 	 				console.log('there was an err', err)
-	 			} else {
-	 				console.log('It worked')
 	 			}
 	 		})
 	 	}

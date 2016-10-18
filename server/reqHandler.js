@@ -23,11 +23,18 @@ exports.courseByProvider = function (req, res) {
 exports.filteredCourses = function (req, res) {
 	// utilities.fetchUdacity();
 	var searchQuery = req.body.searchQuery
+	var splitQuery = searchQuery.split
 	console.log(req.body.searchQuery)
 	Course.find()
+	// .then(function(results){
+	// 	query: ['html', 'css'],
+	// 	data: data,
+	// 	rankings: {
+	// 	  title: 5,
+	// 	  description: 1
+	// 	}
+	// })
 	.then(function(results){
-		res.send(JSON.stringify(results));
+		res.send(JSON.stringify(results.slice(0,20)));
 	})
 }
-
-// exports.defaultCorsHeaders = defaultCorsHeaders;
