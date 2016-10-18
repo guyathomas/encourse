@@ -21,7 +21,7 @@ exports.courseByProvider = function (req, res) {
 }
 
 exports.filteredCourses = function (req, res) {
-	utilities.fetchUdacity();
+	// utilities.fetchUdacity();
 	var searchQuery = req.body.searchQuery
 	console.log(req.body.searchQuery)
 	Course.find()

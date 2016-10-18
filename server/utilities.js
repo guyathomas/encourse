@@ -19,10 +19,31 @@ exports.fetchUdacity = function() {
 	 	return courseArr;
 	 })
 	 .then(function(courseArr) {
-	 	console.log(courseArr);
+	 	//Delete from the database where shortCourse.source = Udacity
+	 	console.log('before', Course.find())
+	 	Course.find({source:"udacity"}).remove().exec();
+	 	
+	 	for (var i = 0; i < courseArr.length; i++) {
+	 		Course.create(courseArr[i], function(err, course) {
+	 			if (err) {
+	 				console.log('there was an err', err)
+	 			} else {
+	 				console.log('It worked')
+	 			}
+	 		})
+	 	}
+
+	 	//Create new modelss in the DB for each of the items in courseArr
+	 	// console.log(courseArr);
 	 })
 	 .catch(function(err) {
 	 	console.log('there was an error', err);
 	 })
 
 }
+
+
+// Tank.create({ size: 'small' }, function (err, small) {
+//   if (err) return handleError(err);
+//   // saved!
+// })
