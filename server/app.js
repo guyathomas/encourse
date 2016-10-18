@@ -12,7 +12,7 @@ app.get('/', function(req, res) {
 
 app.get('/courses', handler.allCourses)
 app.get('/courses/:provider', handler.courseByProvider)
-app.get('/search/:query', handler.courseByProvider)
+app.get('/search/:query', handler.filteredCourses)
 
 
 
