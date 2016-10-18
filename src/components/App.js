@@ -3,17 +3,16 @@ class App extends React.Component {
 		super(),
 
 		this.state = {
-			searchArray: '',
+			searchQuery: '',
 			data: window.shortData,
 			filteredResults: []
 		};
 	}
 
-	updateResults(searchArray) {
+	updateResults(searchQuery) {
 		this.setState(
-			{searchArray: searchArray}
+			{searchQuery: searchQuery}
 		)
-		console.log(searchArray)
 	}
 
 	render() {
@@ -22,7 +21,7 @@ class App extends React.Component {
 				<h1>Search MOOC's</h1>
 				<Search updateResults={this.updateResults.bind(this)}/>
 				<Prefs />
-				<Results results={this.state.results}/>
+				<Results results={this.state.filteredResults}/>
 			</div>
 		);
 	}

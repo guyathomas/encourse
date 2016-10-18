@@ -1,19 +1,34 @@
 var express = require('express');
 var app = express();
-var handler = require('./reqHandler')
+var handler = require('./reqHandler');
+var bodyParser = require('body-parser')
+var path = require('path');
 
-// app.use(express.static('__dirname'));
+// var cors = require('cors'); //tryint to fix 405 bad request
+// app.use(cors());//tryint to fix 405 bad request
 
-// app.get('/', handler.test); TODO: show index.html
-// app.get('/', function(req, res) {
-// 	res.send('This will be the status page')
-// })
 
-app.use('/', express.static('../'));
+// app.use(function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+//   next();
+// });
 
-app.get('/courses', handler.allCourses)
-app.get('/courses/:provider', handler.courseByProvider)
-app.get('/search/:query', handler.filteredCourses)
+// app.options('*', cors()); //tryint to fix 405 bad request
+
+// app.use(cors());
+// console.log(__dirname)
+console.log(path.join(__dirname, '../'))
+app.use(bodyParser.json())
+app.use(express.static(path.join(__dirname, '../')));
+// app.use(express.static('../index.html')); //Does not seem to be
+app.post('/search', handler.filteredCourses);
+app.get('/courses', handler.allCourses);
+app.get('/courses/:provider', handler.courseByProvider);
+
+app.get('/*', function(req, res){console.log('Missed the Get')});
+app.post('/*', function(req, res){console.log('Missed the Post')});
 
 
 

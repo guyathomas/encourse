@@ -1,8 +1,26 @@
 const Search = (props) => {
-	
 	var updateResults = function(e) {
-		var searchArray = e.target.value.split(' ');
-		props.updateResults(searchArray);
+
+		var searchQuery = e.target.value;
+		props.updateResults(searchQuery);
+		console.log(searchQuery);
+
+
+		fetch('/search', {
+			method: 'post',
+			body: JSON.stringify({query: searchQuery})
+		})
+		.then(function(res){
+			console.log('the response was ', res);
+		})
+		.catch(function(err) {
+			console.log('it returned an error', err);
+		})
+
+		// $.post( "search", { searchArray: searchArray })
+		//   .done(function(data) {
+		//     console.log('response data', data)
+		//   });
 	}
 
 
@@ -17,7 +35,3 @@ const Search = (props) => {
 }
 
 window.Search = Search;
-
- var result = relevance({
-    query: ['html', 'css'],
-    data: data,
