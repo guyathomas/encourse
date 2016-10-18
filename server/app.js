@@ -5,10 +5,11 @@ var handler = require('./reqHandler')
 // app.use(express.static('__dirname'));
 
 // app.get('/', handler.test); TODO: show index.html
-app.get('/', function(req, res) {
-	res.send('This will be the status page')
-})
+// app.get('/', function(req, res) {
+// 	res.send('This will be the status page')
+// })
 
+app.use('/', express.static('../'));
 
 app.get('/courses', handler.allCourses)
 app.get('/courses/:provider', handler.courseByProvider)

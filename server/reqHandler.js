@@ -12,8 +12,13 @@ exports.courseByProvider = function (req, res) {
 }
 
 exports.filteredCourses = function (req, res) {
-	Course.find({})
-	.then(function(data) {
-		res.send(JSON.stringify(data));
-	})
+	var query = {
+		$or: req.params.search
+	}
+
+	Course.find()
+		.where(query)
+		.then(function(data) {
+			res.send(JSON.stringify(data));
+		})
 }
