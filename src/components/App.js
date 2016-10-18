@@ -20,8 +20,10 @@ class App extends React.Component {
 	render() {
 		return (
 			<div>
-				<h1>Search MOOC's</h1>
-				<Search updateResults={this.updateResults.bind(this)}/>
+				<div className="jumbotron">
+					<h1>What do you want to learn?</h1>
+					<Search updateResults={this.updateResults.bind(this)}/>
+				</div>
 				<Prefs />
 				<Results results={this.state.filteredResults}/>
 			</div>
