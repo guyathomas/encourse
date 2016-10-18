@@ -3,15 +3,20 @@ const Search = (props) => {
 
 		var searchQuery = e.target.value;
 		props.updateResults(searchQuery);
-		console.log(searchQuery);
-
 
 		fetch('/search', {
-			method: 'post',
-			body: JSON.stringify({query: searchQuery})
+			method: 'POST',
+			body: JSON.stringify({searchQuery: searchQuery}),
+			headers: {
+			  'Accept': 'application/json',
+			  'Content-Type': 'application/json'
+			}
 		})
 		.then(function(res){
-			console.log('the response was ', res);
+			return res.json();
+		})
+		.then(function(parsedResults) {
+			console.log(parsedResults)
 		})
 		.catch(function(err) {
 			console.log('it returned an error', err);

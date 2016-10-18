@@ -19,8 +19,11 @@ var path = require('path');
 
 // app.use(cors());
 // console.log(__dirname)
-console.log(path.join(__dirname, '../'))
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(bodyParser.json())
+
 app.use(express.static(path.join(__dirname, '../')));
 // app.use(express.static('../index.html')); //Does not seem to be
 app.post('/search', handler.filteredCourses);

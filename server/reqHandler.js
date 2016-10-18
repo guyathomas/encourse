@@ -20,22 +20,12 @@ exports.courseByProvider = function (req, res) {
 }
 
 exports.filteredCourses = function (req, res) {
-	var searchQuery = req.body.query
-	console.log(req.body)
+
+	var searchQuery = req.body.searchQuery
+	console.log(req.body.searchQuery)
 	Course.find()
 	.then(function(results){
-		// var sorted = relevance({
-		//     query: searchQuery,
-		//     data: results,
-		//     rankings: {
-		//       title: 5,
-		//       description: 1
-		//     }
-		//   })
-		// res.header('Access-Control-Allow-Origin', '*'); 
-  //       res.header('Access-Control-Allow-Methods', 'GET, POST');
-  //       res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-		res.send("Test");
+		res.send(JSON.stringify(results));
 	})
 }
 
