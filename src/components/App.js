@@ -9,10 +9,12 @@ class App extends React.Component {
 		};
 	}
 
-	updateResults(searchQuery) {
+	updateResults(searchQuery, filteredResults) {
 		this.setState(
-			{searchQuery: searchQuery}
+			{searchQuery: searchQuery,
+			 filteredResults: filteredResults}
 		)
+		console.log(this.state);
 	}
 
 	render() {

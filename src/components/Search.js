@@ -2,7 +2,6 @@ const Search = (props) => {
 	var updateResults = function(e) {
 
 		var searchQuery = e.target.value;
-		props.updateResults(searchQuery);
 
 		fetch('/search', {
 			method: 'POST',
@@ -16,16 +15,11 @@ const Search = (props) => {
 			return res.json();
 		})
 		.then(function(parsedResults) {
-			console.log(parsedResults)
+			props.updateResults(searchQuery, parsedResults);
 		})
 		.catch(function(err) {
 			console.log('it returned an error', err);
 		})
-
-		// $.post( "search", { searchArray: searchArray })
-		//   .done(function(data) {
-		//     console.log('response data', data)
-		//   });
 	}
 
 

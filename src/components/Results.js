@@ -1,7 +1,7 @@
 const Results = (props) => {
 	return (
-		<div>
-			Results
+		<div className="container">
+			{props.results.map(result => <ResultItem result={result}/>)}
 		</div>
 	)
 }
