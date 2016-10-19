@@ -5,7 +5,8 @@
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "babel --watch src --out-dir compiled"
+    "start-dev": "babel --watch src --out-dir compiled",
+    "start": "node server/app.js"
   },
   "repository": {
     "type": "git",
