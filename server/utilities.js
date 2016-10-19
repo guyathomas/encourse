@@ -3,6 +3,13 @@ var Course = require('../db/models/course.js')
 
 //TODO: inmplement truncate that limits the descriptions to 200 characters
 
+var descriptionTruncate = function(description) {
+	if (description.length > 300 ) {
+		description = description.slice(0,300) + '...';
+	}
+	return description;
+}
+
 exports.fetchUdacity = function() {
 	//Get the data from Udacities API and convert into format for our database
 	 rp('https://www.udacity.com/public-api/v0/courses')
@@ -14,7 +21,7 @@ exports.fetchUdacity = function() {
 
 			shortCourse.platform = "udacity";
 			shortCourse.title = parsedBody[i].title;
-			shortCourse.description = parsedBody[i].short_summary;
+			shortCourse.description = descriptionTruncate(parsedBody[i].short_summary);
 			shortCourse.link = parsedBody[i].homepage;
 			shortCourse.image = parsedBody[i].image
 			shortCourse.difficulty = parsedBody[i].level;
@@ -67,15 +74,7 @@ exports.fetchCoursera = function(recursive, isEnd, start) {
 
 					shortCourse.platform = 'coursera'
 					shortCourse.title = courses[i].name;//var result = str;
-					var matchedDesc = courses[i].description.match(/[^\.!\?]+[\.!\?]+/g)
-
-					//
-					if (matchedDesc) {
-						shortCourse.description = matchedDesc.slice(0,2).toString().slice(0,300) + "..."
-					} else {
-						shortCourse.description = courses[i].description.split('.').slice(0,2).join('.').slice(0,300) + "..."
-					}
-
+					shortCourse.description = descriptionTruncate(courses[i].description)
 					shortCourse.link = 'https://www.coursera.org/learn/' + courses[i].slug;
 					shortCourse.image = courses[i].photoUrl
 					shortCourse.difficulty = courses[i].specializations.length === 0 ? 'Anyone' : 'Check Course Site';
