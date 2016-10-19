@@ -1,8 +1,10 @@
 const Search = (props) => {
 	var updateResults = function(e) {
-
 		var searchQuery = e.target.value;
-
+		if (searchQuery.length === 0) {
+			props.updateResults('', [])
+			return
+		}; 
 		fetch('/search', {
 			method: 'POST',
 			body: JSON.stringify({searchQuery: searchQuery}),
@@ -22,12 +24,13 @@ const Search = (props) => {
 		})
 	}
 
+	var throttledUpdateResults = _.throttle(updateResults, 200); 
 
 	return (<div>
 				<input 
 					type="text" 
 					placeholder="What do you want to learn?" 
-					onChange={updateResults}
+					onChange={throttledUpdateResults}
 					className="form-control"
 				/>
 	        </div>

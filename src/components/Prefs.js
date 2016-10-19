@@ -1,7 +1,6 @@
 const Prefs = (props) => {
 	return (
 		<div>
-			Prefs
 		</div>
 	)
 }

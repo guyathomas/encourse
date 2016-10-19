@@ -14,7 +14,7 @@ class App extends React.Component {
 			{searchQuery: searchQuery,
 			 filteredResults: filteredResults}
 		)
-		console.log(this.state);
+		console.log('this.state.searchQuery', this.state.searchQuery);
 	}
 
 	render() {
