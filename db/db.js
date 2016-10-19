@@ -1,6 +1,9 @@
 //Establish mongoose connection
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/moocsearch');
+var webUrl =  process.env.MONGOLAB_URI
+var localUrl = 'mongodb://localhost/moocsearch'
+
+mongoose.connect(webUrl);
 
 //Establish handing for the connection
 var db = mongoose.connection;
