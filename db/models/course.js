@@ -3,12 +3,13 @@ var db = require('../db.js');
 
 //Schema
 var courseSchema = new mongoose.Schema({
+	platform: String,
 	title: String,
 	description: String,
-	// fullDescription: String, this is to ensure more relevant search results
 	link: String,
+	image: String,
 	difficulty: String,
-	duration: Number
+	duration: String
 });
 
 //Model
