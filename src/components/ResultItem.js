@@ -5,7 +5,7 @@ const ResultItem = (props) => {
 			<div className="lead">{props.result.description}</div>
 			<div className="quickInfo">
 				<div>{"Difficulty: " + props.result.difficulty}</div>
-				<div>{"Duration: " + props.result.duration + " weeks"}</div>
+				<div>{"Duration: " + props.result.duration}</div>
 			</div>
 			<a href={props.result.link} className="learn-more btn btn-primary active" role="button">Learn More</a>
 		</div>
