@@ -1,5 +1,4 @@
 const ResultItem = (props) => {
-
 	return (
 		<div className="col-md-4">
 			<div><a href={props.result.link}><h3>{props.result.title}</h3></a></div>

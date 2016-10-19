@@ -9,7 +9,7 @@ exports.fetchUdacity = function() {
 		var parsedBody = JSON.parse(body).courses;
 		for (var i = 0; i < parsedBody.length; i++) {
 			var shortCourse = {};
-			// shortCourse.brand = "udacity";
+			shortCourse.source = "udacity";
 			shortCourse.title = parsedBody[i].title;
 			shortCourse.description = parsedBody[i].short_summary;
 			shortCourse.link = parsedBody[i].homepage;
@@ -20,8 +20,8 @@ exports.fetchUdacity = function() {
 	 	return courseArr;
 	 })
 	 .then(function(courseArr) {
-	 	//Delete from the database where shortCourse.brand = Udacity
-	 	Course.find({brand:"udacity"}).remove().exec();
+	 	//Delete from the database where shortCourse.source = Udacity
+	 	Course.find({source:"udacity"}).remove().exec();
 	 	
 	 	//Add new results into the database
 	 	for (var i = 0; i < courseArr.length; i++) {
