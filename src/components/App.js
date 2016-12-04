@@ -14,17 +14,17 @@ class App extends React.Component {
 			{searchQuery: searchQuery,
 			 filteredResults: filteredResults}
 		)
-		console.log(this.state);
 	}
 
 	render() {
 		return (
-			<div>
-				<div className="jumbotron">
-					<h1>Learn More, In Less Time</h1>
-					<Search updateResults={this.updateResults.bind(this)} className="jumbo-search" />
+			<div className="app-container">
+				<div className="hero-container">
+					<div className="hero">
+						<h1>Learn More, In Less Time</h1>
+						<Search updateResults={this.updateResults.bind(this)}/>
+					</div>
 				</div>
-				<Prefs />
 				<Results results={this.state.filteredResults}/>
 			</div>
 		);

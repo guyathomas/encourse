@@ -16,10 +16,8 @@ app.post('/search', handler.filteredCourses);
 // app.get('/courses', handler.allCourses);
 // app.get('/courses/:provider', handler.courseByProvider);
 
-app.get('/*', function(req, res){console.log('Missed the Get')});
-app.post('/*', function(req, res){console.log('Missed the Post')});
-
-
+// app.get('/*', function(req, res){console.log('Missed the Get')});
+// app.post('/*', function(req, res){console.log('Missed the Post')});
 
 //Set up listening
 app.listen(3000, function () {

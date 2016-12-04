@@ -1,16 +1,16 @@
 const ResultItem = (props) => {
 	return (
-		<div className="col-sm-4">
-			<div className="card">
-				<img className="card-img-top" src={props.result.image} alt="Card image cap"/>
-				<div className="card-block">
-					<div className="card-title"><h4>{props.result.title}</h4><b>{props.result.platform}</b></div>
-					<div className="card-text">{props.result.description}</div>
-					<div className="quickInfo">
+		<div>
+			<div>
+				<img src={props.result.image} alt="Card image cap"/>
+				<div >
+					<div><h4>{props.result.title}</h4><b>{props.result.platform}</b></div>
+					<div>{props.result.description}</div>
+					<div>
 						<div><b>Difficulty: </b>{props.result.difficulty} </div>
 						<div><b>Duration: </b>{props.result.duration} </div>
 					</div>
-					<a href={props.result.link} className="learn-more btn btn-primary active" role="button">Learn More</a>
+					<a href={props.result.link} role="button">Learn More</a>
 				</div>
 			</div>
 		</div>

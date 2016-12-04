@@ -35,7 +35,7 @@ const Search = (props) => {
 					type="text" 
 					placeholder="What do you want to learn?" 
 					onChange={throttledUpdateResults}
-					className="form-control"
+					className="search"
 				/>
 	        </div>
 	        );
