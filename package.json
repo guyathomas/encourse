@@ -5,8 +5,10 @@
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel --watch src --out-dir compiled",
-    "start": "nodemon server/app.js"
+    "build-w": "babel --watch src --out-dir compiled",
+    "build": "babel src --out-dir compiled",
+    "up": "nodemon server/app.js",
+    "start": "npm run build && npm run up"
   },
   "repository": {
     "type": "git",

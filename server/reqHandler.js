@@ -14,8 +14,18 @@ exports.courseByProvider = function (req, res) {
 }
 
 exports.filteredCourses = function (req, res) {
-	// utilities.fetchCoursera();
-	// utilities.fetchUdacity();
+	// utilities.fetchCoursera(); //Don't delete
+	// utilities.fetchUdacity(); //Don't delete
+
+	// Course.find({name : self.name}, function (err, docs) {
+	//     if (!docs.length){
+	//         next();
+	//     }else{                
+	//         console.log('user exists: ',self.name);
+	//         next(new Error("User exists!"));
+	//     }
+	// });
+
 	var searchQuery = req.body.searchQuery;
 	var splitQuery = searchQuery.trim().split(' ');
 	
