@@ -1,6 +1,6 @@
 const Results = (props) => {
 	return (
-		<div>
+		<div id="results">
 			{props.results.map(result => <ResultItem result={result}/>)}
 		</div>
 	)

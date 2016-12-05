@@ -38,23 +38,51 @@ input.search {
 =============Results============
 ==============================*/
 
-div#masonry {
-	display: -ms-flexbox;
-	-ms-flex-direction: column;
-	-ms-flex-wrap: wrap;
-	display: flex;
-	flex-direction: column;
-	flex-wrap: wrap;
-	height: 100vw;
-	font-size: 0; 
+#results {
+	background-color: #F5F6F8;
+	/*Masonary*/
+	column-count: 4;
+	column-gap: 0;
 }
-div#masonry img { 
-	width: 33.3%;
-	transition: .8s opacity;
+
+.result { 
+	float:left;
+	break-inside: avoid;
+	background-color: white;
+	margin: 5% 2.5% 0 2.5%;
+	padding: 2%;
+	background: #FEFEFE;
+	box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.50);
 }
-div#masonry:hover img {
-	opacity: 0.3;
+
+.result img {
+	width: 100%;
 }
-div#masonry:hover img:hover {
-	opacity: 1;
+
+.result h4 {
+	padding-top: 5%;
+}
+
+.result .details {
+	padding: 2% 0;
+}
+
+.result .description {
+	color: #626262;
+}
+
+.result a {
+	color:white;
+	background: #0B486B;
+	padding: 2%;
+}
+
+.result .center-wrapper {
+	margin: 2% 0;
+	flex-direction: row;
+	justify-content: center;
+}
+
+@media screen and (max-width: 500px) {
+	#results { 	column-count: 1; }
 }
