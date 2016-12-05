@@ -10,6 +10,7 @@ var app = express();
 var handler = require('./reqHandler');
 var bodyParser = require('body-parser')
 var path = require('path');
+const port = process.env.PORT || 3000
 
 
 app.use(bodyParser.urlencoded({
@@ -24,6 +25,6 @@ app.post('/search', handler.filteredCourses);
 // app.get('/courses/:provider', handler.courseByProvider);
 
 //Set up listening
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+app.listen(port, function () {
+  console.log(`Example app listening on port ${port}!`);
 });
