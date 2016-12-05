@@ -97,9 +97,23 @@ input.search:focus {
 	justify-content: center;
 }
 
+
+@media screen and (max-width: 1250px) {
+	#results { 	column-count: 3; }
+}
+
+@media screen and (max-width: 900px) {
+	#results { 	column-count: 2; }
+}
+
 @media screen and (max-width: 500px) {
 	#results { 	column-count: 1; }
 }
+/*@media screen and (max-width: 500px) {
+	#results { 	column-count: 1; }
+}*/
+
+
 
 .fullscreen {
 	height: 100vh;
