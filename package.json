@@ -8,7 +8,7 @@
     "build-w": "babel --watch src --out-dir compiled",
     "build": "babel src --out-dir compiled",
     "start": "npm run build && NODE_ENV=production nodemon server/app.js",
-    "start-dev": "NODE_ENV=development && npm run build-w && npm run up"
+    "start-dev": "NODE_ENV=development && nodemon server/app.js"
   },
   "repository": {
     "type": "git",
