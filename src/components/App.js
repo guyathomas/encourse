@@ -19,6 +19,7 @@ class App extends React.Component {
 	render() {
 		return (
 			<div className="app-container">
+				<Header />
 				<div className={"hero-container" + (this.state.searchQuery ? '' : ' fullscreen')}>
 					<div className="hero">
 						<h1>Search Udemy, Udacity, edX & Cousera in one place</h1>
