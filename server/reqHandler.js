@@ -17,13 +17,10 @@ exports.filteredCourses = function (req, res) {
 	// utilities.fetchCoursera(); //Don't delete
 	// utilities.fetchUdacity(); //Don't delete
 
-	// Course.find({name : self.name}, function (err, docs) {
-	//     if (!docs.length){
-	//         next();
-	//     }else{                
-	//         console.log('user exists: ',self.name);
-	//         next(new Error("User exists!"));
-	//     }
+	// var elasticsearch = require('elasticsearch');
+	// var connectionString = process.env.SEARCHBOX_URL;
+	// var client = new elasticsearch.Client({
+	//     host: connectionString
 	// });
 
 	var searchQuery = req.body.searchQuery;

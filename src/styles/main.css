@@ -40,6 +40,12 @@ input.search {
 	width: 100%;
     font-size: 1.2em;
     height: 2em;
+    border: none;
+    border-radius: 25px;
+}
+
+input.search:focus {
+    outline-width: 0;
 }
 
 /*==============================
