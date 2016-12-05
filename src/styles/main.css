@@ -13,13 +13,13 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background-image: url(https://business.udemy.com/wp-content/uploads/2016/11/UFB_Home_Marquee_1.png);
+	background-image: url(http://res.cloudinary.com/dqvlfpaev/image/upload/c_scale,q_auto,w_2209/v1480903658/Encourse%20Hero.jpg);
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: center;
 	height: 40vh;
 	width: 100%;
-	transition: all .5s linear;
+	transition: all 1s ease;
 }
 
 .hero {
