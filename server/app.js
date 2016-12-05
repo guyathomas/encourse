@@ -1,4 +1,9 @@
-try {require('../env.js');}
+//Only load environment variables if they exist
+try {
+    require('../env.js');
+} catch (ex) {
+	console.log('Environment variables file does not exist')
+}
 
 var express = require('express');
 var app = express();
