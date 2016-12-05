@@ -1,4 +1,5 @@
-require('../env.js');
+try {require('../env.js');}
+
 var express = require('express');
 var app = express();
 var handler = require('./reqHandler');
