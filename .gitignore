@@ -16,3 +16,6 @@ compiled/
 node_modules/
 
 .gitignore
+
+#environment variables
+env.js

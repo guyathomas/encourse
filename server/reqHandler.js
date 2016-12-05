@@ -49,7 +49,7 @@ exports.filteredCourses = function (req, res) {
 		});
 	})
 	.then(function(results){
-		res.send(JSON.stringify(results.slice(0,18)));
+		res.send(JSON.stringify(results.slice(0,30)));
 	})
 }
 

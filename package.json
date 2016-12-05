@@ -7,18 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-w": "babel --watch src --out-dir compiled",
     "build": "babel src --out-dir compiled",
-    "up": "nodemon server/app.js",
-    "start": "npm run build && npm run up"
+    "start": "npm run build && NODE_ENV=production nodemon server/app.js",
+    "start-dev": "NODE_ENV=development && npm run build-w && npm run up"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/stolemyusername/2016-09-mvp.git"
   },
-  "keywords": [
-    "mooc",
-    "course",
-    "online"
-  ],
   "author": "Guy Thomas",
   "license": "ISC",
   "bugs": {
@@ -31,6 +26,7 @@
     "babelify": "^7.3.0",
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
+    "nodemon": "^1.11.0",
     "cors": "^2.8.1",
     "express": "^4.14.0",
     "jquery": "^3.1.1",
@@ -48,9 +44,5 @@
     "presets": [
       "react"
     ]
-  },
-  "devDependencies": {
-    "live-server": "^1.1.0",
-    "nodemon": "^1.11.0"
   }
 }
