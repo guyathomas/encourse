@@ -1,10 +1,7 @@
-# MOOC Searcher
+# enCourse
 
 ## What Does This App Do? ##
-  This app is a search engine for online courses
-
-## Who Is It For? ##
-  This app is for people who know what they want out of an online course, but are unsure which platform will suit them best.
+  This application will search Udemy, Udacity, Coursera and edX to find you the most relevant course, regardless of platform.
 
 ## How Will It Work? ##
-  This app will provide suggestions on what online course you should take based on what you expect to get out of the course and other factors such as workload. This will mean that people who have different desired outcomes can be directed straight to the single best course of action.
+  This app stores data from the apis for the above platforms and utilises elastic search to provide the most relevant results to the users.
