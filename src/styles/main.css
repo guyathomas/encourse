@@ -118,3 +118,8 @@ input.search:focus {
 .fullscreen {
 	height: 100vh;
 }
+
+.no-results {
+	font-size: 1.7em;
+	padding-top: 5%;
+}
