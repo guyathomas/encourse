@@ -17,6 +17,7 @@ class App extends React.Component {
 	}
 
 	render() {
+		console.log('filteredResults', this.state.filteredResults)
 		return (
 			<div className="app-container">
 				<Header />
@@ -26,7 +27,7 @@ class App extends React.Component {
 						<Search updateResults={this.updateResults.bind(this)}/>
 					</div>
 				</div>
-				<Results results={this.state.filteredResults}/>
+				<Results searchQuery={this.state.searchQuery} results={this.state.filteredResults}/>
 			</div>
 		);
 	}
