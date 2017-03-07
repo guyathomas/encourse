@@ -5,12 +5,14 @@ const Results = (props) => {
 				{props.results.map(result => <ResultItem result={result}/>)}
 			</div>
 		)
-	} else {
+	} else if (props.searchQuery != ''){
 		return (
 			<div className='no-results'>
 				No courses found for '{props.searchQuery}'
 			</div>
 			)
+	} else {
+		return (<div></div>)
 	}
 	
 }
