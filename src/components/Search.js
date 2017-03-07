@@ -28,7 +28,7 @@ const Search = (props) => {
 		})
 	}
 
-	var throttledUpdateResults = _.throttle(updateResults, 200, {leading: true})
+	var throttledUpdateResults = _.throttle(updateResults, 200, {trailing: true})
 
 	return (<div>
 				<input 
