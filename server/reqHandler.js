@@ -46,7 +46,7 @@ exports.filteredCourses = function (req, res) {
 		});
 	})
 	.then(function(results){
-		res.send(JSON.stringify(results.slice(0,30)));
+		res.send(JSON.stringify(results.slice(0,15)));
 	})
 }
 

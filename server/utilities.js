@@ -1,9 +1,11 @@
-var rp = require('request-promise');
-var Course = require('../db/models/course.js')
+const rp = require('request-promise');
+const Course = require('../db/models/course.js')
+const Promise = require("bluebird");
+const axios = require('axios');
 
 //TODO: inmplement truncate that limits the descriptions to 200 characters
 
-var descriptionTruncate = function(description) {
+const descriptionTruncate = function(description) {
 	if (description.length > 300 ) {
 		description = description.slice(0,300) + '...';
 	}
@@ -32,13 +34,16 @@ exports.fetchUdacity = function() {
 	 })
 	 .then(function(courseArr) {
 	 	//Delete from the database where shortCourse.source = Udacity
-	 	Course.find({source:"udacity"}).remove().exec();
+	 	Course.find({platform:"udacity"}).remove().exec();
 	 	
 	 	//Add new results into the database
+	 	console.log('course length', courseArr.length)
 	 	for (var i = 0; i < courseArr.length; i++) {
 	 		Course.create(courseArr[i], function(err, course) {
 	 			if (err) {
 	 				console.log('there was an err', err)
+	 			} else {
+	 				console.log('Created course')
 	 			}
 	 		})
 	 	}
@@ -49,24 +54,27 @@ exports.fetchUdacity = function() {
 }
 
 exports.fetchCoursera = function(recursive, isEnd, start) {
-	//Initialise and keep track of the pagination
-	console.log("end", isEnd);
-	if (start >= 0) {
-		start = start + 100;
-	} else {
-		var start = 0;
-	}
-	var isEnd;
-	//If we have reached the end of the pagination, return out of recursive calls
-	if (isEnd === true) {
-		return;
-	} else {
-		rp('https://api.coursera.org/api/courses.v1?start=' + start + '&limit=100&fields=description,photoUrl,previewLink,workload,startDate,specializations,primaryLanguages')
-		.then(function(body) {
-			 	var courseArr = [];
-				var parsedBody = JSON.parse(body);
-				var courses = parsedBody.elements;
-					isEnd = !(parsedBody.paging.next)
+
+	let courseCount = 0;
+
+	axios.get('https://api.coursera.org/api/courses.v1')
+	.then((res) => { courseCount = res.data.paging.total })
+	.then(() => {
+		const requests = [];
+		for (var query = 0; query < courseCount; query+= 100) {
+			const pageQuery = new Promise((resolve, reject) => {
+				axios.get(`https://api.coursera.org/api/courses.v1?start=${query}&limit=100&fields=description,photoUrl,previewLink,workload,startDate,specializations,primaryLanguages`)
+				.then((res) => {resolve(res)})
+				.catch((err) => {reject(err)})
+			})
+			requests.push(pageQuery)
+		}
+
+		Promise.all(requests)
+		.then((results) => {
+			const courseArr = [];
+			results.forEach((result) => {
+				var courses = result.data.elements;
 
 				for (var i = 0; i < courses.length; i++) {
 					if (courses[i].primaryLanguages.indexOf('en') < 0 ) {continue;} ////If english is not the main language, skip this course
@@ -74,34 +82,78 @@ exports.fetchCoursera = function(recursive, isEnd, start) {
 
 					shortCourse.platform = 'coursera'
 					shortCourse.title = courses[i].name;//var result = str;
-					shortCourse.description = descriptionTruncate(courses[i].description)
+					shortCourse.description = descriptionTruncate(courses[i].description);
 					shortCourse.link = 'https://www.coursera.org/learn/' + courses[i].slug;
-					shortCourse.image = courses[i].photoUrl
+					shortCourse.image = courses[i].photoUrl || 'https://pbs.twimg.com/profile_images/579039906804023296/RWDlntRx.jpeg';
 					shortCourse.difficulty = courses[i].specializations.length === 0 ? 'Anyone' : 'Check Course Site';
 					shortCourse.duration = courses[i].workload;
 					courseArr.push(shortCourse);
 				}
 			 	return courseArr;
+			})
+
+			Course.find({platform:'coursera'}).remove().exec();
+			
+			//Add new results into the database
+			console.log('course length', courseArr.length)
+			for (var i = 0; i < courseArr.length; i++) {
+				Course.create(courseArr[i], function(err, course) {
+					if (err) {
+						console.log('there was an err', err)
+					} else {
+						console.log('Created course')
+					}
+				})
+			}
 		})
-		.then(function(courseArr) {
-				//Delete from the database where shortCourse.source = coursera (onlu when this is the first call)
-				if (!recursive) {
-					Course.remove({}, function(action) {
-						console.log('The database has been cleared')
-					})
-				}
+		.catch((err) => {
+			console.log('Error in creating/running the request array', err)
+		})
+	})
+	.catch((err) => {
+		console.log('Error in getting number of courses', err)
+	})
+
+	// 	.then(function(body) {
+	// 		 	var courseArr = [];
+	// 			var parsedBody = JSON.parse(body);
+	// 			var courses = parsedBody.elements;
+	// 				isEnd = !(parsedBody.paging.next)
+
+	// 			for (var i = 0; i < courses.length; i++) {
+	// 				if (courses[i].primaryLanguages.indexOf('en') < 0 ) {continue;} ////If english is not the main language, skip this course
+	// 				var shortCourse = {};
+
+	// 				shortCourse.platform = 'coursera'
+	// 				shortCourse.title = courses[i].name;//var result = str;
+	// 				shortCourse.description = descriptionTruncate(courses[i].description)
+	// 				shortCourse.link = 'https://www.coursera.org/learn/' + courses[i].slug;
+	// 				shortCourse.image = courses[i].photoUrl
+	// 				shortCourse.difficulty = courses[i].specializations.length === 0 ? 'Anyone' : 'Check Course Site';
+	// 				shortCourse.duration = courses[i].workload;
+	// 				courseArr.push(shortCourse);
+	// 			}
+	// 		 	return courseArr;
+	// 	})
+	// 	.then(function(courseArr) {
+	// 			//Delete from the database where shortCourse.source = coursera (onlu when this is the first call)
+	// 			if (!recursive) {
+	// 				Course.remove({}, function(action) {
+	// 					console.log('The database has been cleared')
+	// 				})
+	// 			}
 				
-				//Add new results into the database
-				for (var i = 0; i < courseArr.length; i++) {
-					Course.create(courseArr[i], function(err, course) {
-						if (err) {
-							console.log('there was an err', err)
-						}
-					})
-				}
-		})
-		.then(function() {
-			return exports.fetchCoursera(true, isEnd, start)
-		})
-	}
+	// 			//Add new results into the database
+	// 			for (var i = 0; i < courseArr.length; i++) {
+	// 				Course.create(courseArr[i], function(err, course) {
+	// 					if (err) {
+	// 						console.log('there was an err', err)
+	// 					}
+	// 				})
+	// 			}
+	// 	})
+	// 	.then(function() {
+	// 		return exports.fetchCoursera(true, isEnd, start)
+	// 	})
+	// }
 }
