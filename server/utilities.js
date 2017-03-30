@@ -42,32 +42,38 @@ const formatCoursera = function (rawCoursePage, callback) {
 	callback(courses);
 }
 
+const formatUdacity = function (courses) {
+	const courseArr = [];
+	for (var i = 0; i < courses.length; i++) {
+		var shortCourse = {};
+
+		shortCourse.platform = "udacity";
+		shortCourse.title = courses[i].title;
+		shortCourse.description = descriptionTruncate(courses[i].short_summary);
+		shortCourse.link = courses[i].homepage;
+		shortCourse.image = courses[i].image
+		shortCourse.difficulty = courses[i].level;
+		shortCourse.duration = parseInt(courses[i].expected_duration) * 10 + ' hours';
+		courseArr.push(shortCourse);
+	}
+
+	return courseArr;
+}
+
 exports.fetchUdacity = function() {
 	//Get the data from Udacities API and convert into format for our database
-	 rp('https://www.udacity.com/public-api/v0/courses')
+	 axios.get('https://www.udacity.com/public-api/v0/courses')
 	 .then(function(body) {
-	 	var courseArr = [];
-		var parsedBody = JSON.parse(body).courses;
-		for (var i = 0; i < parsedBody.length; i++) {
-			var shortCourse = {};
-
-			shortCourse.platform = "udacity";
-			shortCourse.title = parsedBody[i].title;
-			shortCourse.description = descriptionTruncate(parsedBody[i].short_summary);
-			shortCourse.link = parsedBody[i].homepage;
-			shortCourse.image = parsedBody[i].image
-			shortCourse.difficulty = parsedBody[i].level;
-			shortCourse.duration = parseInt(parsedBody[i].expected_duration) * 10 + ' hours';
-			courseArr.push(shortCourse);
-		}
-	 	return courseArr;
+		var data = body.data.courses;
+		const formattedCourses = formatUdacity(data)
+	 	return formattedCourses;
 	 })
 	 .then(function(courseArr) {
 	 	Course.find({platform:"udacity"}).remove().exec();
 	 	createCourseFromArr(courseArr);
 	 })
 	 .catch(function(err) {
-	 	console.log('there was an error', err);
+	 	console.log('there was an creating/fetching udacity', err);
 	 })
 }
 
@@ -97,7 +103,6 @@ exports.fetchCoursera = function(recursive, isEnd, start) {
 					courseArr.push(cleanData)
 				})
 			})
-			console.log('Is the coursearray still', courseArr)
 			Course.find({platform:'coursera'}).remove().exec();
 			createCourseFromArr(courseArr)
 		})

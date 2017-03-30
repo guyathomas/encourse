@@ -14,7 +14,7 @@ exports.courseByProvider = function (req, res) {
 }
 
 exports.filteredCourses = function (req, res) {
-	utilities.fetchCoursera(); //Don't delete
+	// utilities.fetchCoursera(); //Don't delete
 	// utilities.fetchUdacity(); //Don't delete
 
 	var searchQuery = req.body.searchQuery;
