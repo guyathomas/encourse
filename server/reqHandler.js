@@ -14,14 +14,8 @@ exports.courseByProvider = function (req, res) {
 }
 
 exports.filteredCourses = function (req, res) {
-	// utilities.fetchCoursera(); //Don't delete
+	utilities.fetchCoursera(); //Don't delete
 	// utilities.fetchUdacity(); //Don't delete
-
-	// var elasticsearch = require('elasticsearch');
-	// var connectionString = process.env.SEARCHBOX_URL;
-	// var client = new elasticsearch.Client({
-	//     host: connectionString
-	// });
 
 	var searchQuery = req.body.searchQuery;
 	var splitQuery = searchQuery.trim().split(' ');
@@ -46,7 +40,7 @@ exports.filteredCourses = function (req, res) {
 		});
 	})
 	.then(function(results){
-		res.send(JSON.stringify(results.slice(0,15)));
+		res.send(JSON.stringify(results.slice(0,20)));
 	})
 }
 
