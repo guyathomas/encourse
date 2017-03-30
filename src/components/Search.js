@@ -29,7 +29,6 @@ const Search = (props) => {
 	}
 
 	var debouncedUpdateResults = _.debounce(updateResults, 500, {trailing: true})
-	var throttledUpdateResults = _.throttle(updateResults, 200, {trailing: true})
 
 	return (<div>
 				<input 
