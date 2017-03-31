@@ -22,12 +22,12 @@ app.use(express.static(path.join(__dirname, '../')));
 
 app.post('/search', handler.filteredCourses);
 
-axios.get('localhost:3001/ping')
+axios.get('http://localhost:3001/elastic/ping')
 .then((res, err) => {
 	if (err) {
 		console.log('No Connection between ES and Web Service', err)
 	} else {
-		console.log('Web service can contact ES', res)
+		console.log('Web service can contact ES')
 	}
 })
 

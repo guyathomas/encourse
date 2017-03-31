@@ -11,7 +11,6 @@ module.exports = {
 		elasticClient.ping({
 		  	requestTimeout: 30000,
 		}, function (error) {
-			console.log(error)
 			if (error) {
 				res.status(500)
 			    return res.json({status: false, msg: 'Elasticsearch cluster is down!'})
