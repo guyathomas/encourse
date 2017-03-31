@@ -15,7 +15,7 @@ exports.courseByProvider = function (req, res) {
 }
 
 exports.filteredCourses = function (req, res) {
-	utilities.fetchCoursera(); //Don't delete
+	// utilities.fetchCoursera(); //Don't delete
 	// utilities.fetchUdacity(); //Don't delete
 
 	var searchQuery = req.body.searchQuery;
@@ -45,34 +45,36 @@ exports.filteredCourses = function (req, res) {
 	})
 }
 
-exports.elasticSearch = function (req, res) {
-	utilities.fetchCoursera(); //Don't delete
+exports.elasticSearch = function (clientReq, clientRes) {
+	// utilities.fetchCoursera(); //Don't delete
 	// utilities.fetchUdacity(); //Don't delete
 
-	var searchQuery = req.body.searchQuery;
+	var searchQuery = clientReq.body.searchQuery;
 	console.log(searchQuery)
 
 	axios.post('http://localhost:3001/elastic/search', {
-		"index": "courses",
-		"type": "coursera",
-		"payload": {
-			"query": {
-				"bool": {
-					"should": [{
-						"term": {
-							"description": searchQuery
-						}
-					}],
-					"minimum_should_match": 1
+	"index": "encourse",
+	"type": "course",
+	"payload": {
+		"query": {
+			"match": {
+				"description": {
+					"query": searchQuery
+					}
 				}
 			}
 		}
-  	})
-	.then((res, err) => {
-		if (err) {
-			console.log('No Connection between ES and Web Service', err)
+	})
+	.then((esRes, esErr) => {
+		if (esErr) {
+			console.log('No Connection between ES and Web Service', esErr)
 		} else {
 			console.log('Web service can contact ES')
+			console.log('esRes.hits.hits', esRes.data.hits.hits)
+			const pluckedData = esRes.data.hits.hits.map((hit) => {
+				return hit._source;
+			})
+				clientRes.status(200).send(pluckedData)
 		}
 	})
 }

@@ -37,7 +37,7 @@ const formatCoursera = function (rawCoursePage, callback) {
 		shortCourse.image = rawCoursePage[i].photoUrl || 'https://pbs.twimg.com/profile_images/579039906804023296/RWDlntRx.jpeg';
 		shortCourse.difficulty = rawCoursePage[i].specializations.length === 0 ? 'Anyone' : 'Check Course Site';
 		shortCourse.duration = rawCoursePage[i].workload;
-		courses.push({ "index" : { "_index" : "courses", "_type" : "coursera" } })
+		courses.push({ "index" : { "_index" : "encourse", "_type" : "course" } })
 		courses.push(shortCourse);
 	}
 	callback(courses);
