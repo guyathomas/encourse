@@ -9,7 +9,6 @@ var express = require('express');
 var app = express();
 const routes = require('./routes');
 const port = process.env.PORT || 3001
-console.log('Trying to bring up ES service')
 app.use(bodyParser.urlencoded({
     extended: true
 }));

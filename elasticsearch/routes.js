@@ -2,6 +2,7 @@ const ElasticSearch = require('./ElasticSearch.js')
 const routes = require('express').Router()
 
 routes.get('/ping', (req, res) => {
+    console.log('ping request recieved')
     ElasticSearch.ping(req, res);
 });
 

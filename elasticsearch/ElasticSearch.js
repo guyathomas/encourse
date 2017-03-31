@@ -1,7 +1,8 @@
 var elasticsearch = require('elasticsearch');
 var elasticClient = new elasticsearch.Client({
   	host: 'localhost:9200',
-  	log: 'trace'
+  	log: 'trace',
+  	httpAuth: 'elastic:changeme'
 });
 
 module.exports = {
@@ -9,6 +10,7 @@ module.exports = {
 		elasticClient.ping({
 		  	requestTimeout: 30000,
 		}, function (error) {
+			console.log(error)
 			if (error) {
 				res.status(500)
 			    return res.json({status: false, msg: 'Elasticsearch cluster is down!'})
