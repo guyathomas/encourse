@@ -25,7 +25,7 @@ app.post('/search', handler.filteredCourses);
 axios.get('localhost:3001/ping')
 .then((res, err) => {
 	if (err) {
-		console.log('error', err)
+		console.log('error in ping', err)
 	} else {
 		console.log('res from ES', res)
 	}
@@ -37,5 +37,5 @@ axios.get('localhost:3001/ping')
 
 //Set up listening
 app.listen(port, function () {
-  console.log(`Example app listening on port ${port}!`);
+  console.log(`Web server listening on port ${port}!`);
 });

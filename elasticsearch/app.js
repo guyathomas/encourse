@@ -24,5 +24,5 @@ app.use('/elastic', require('./routes'))
 
 //Set up listening
 app.listen(port, function () {
-  console.log(`Example app listening on port ${port}!`);
+  console.log(`ES router listening on port ${port}!`);
 });
