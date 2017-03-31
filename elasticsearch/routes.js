@@ -64,3 +64,5 @@ routes.post('/delete-document', (req, res) => {
 routes.post('/delete_all', (req, res) => {
     ElasticSearch.deleteAll(req, res);
 });
+
+module.exports = routes;
