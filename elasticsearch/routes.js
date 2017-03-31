@@ -27,11 +27,19 @@ routes.post('/index/mapping', (req, res) => {
 });
 
 routes.post('/add', (req, res) => {
-    //  [ 4 ] Add data to index
+    //  [ 4.a ] Add data to index
     const payload = req.body.payload || {};
     const index = req.body.index || 'courses';
     const docType = req.body.type || 'misc';
     ElasticSearch.addDocument(req, res, index, docType, payload);
+    return null; 
+});
+
+routes.post('/addAll', (req, res) => {
+    //  [ 4.b ] Add data to index
+    const payload = req.body.payload || [];
+    // console.log('payload:', payload)
+    ElasticSearch.addAllDocuments(req, res, payload);
     return null; 
 });
 

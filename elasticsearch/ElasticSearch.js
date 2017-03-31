@@ -68,9 +68,8 @@ module.exports = {
 	    });
 	},
 
-	// 4. Add/Update a document
+	// 4.a. Add/Update a document
 	addDocument: function(req, res, indexName, docType, payload){
-	console.log('in addDocument', indexName, docType, payload)
 	    elasticClient.index({
 	        index: indexName,
 	        type: docType,
@@ -84,6 +83,27 @@ module.exports = {
 	        res.status(500)
 	        return res.json(err)
 	    });
+	},
+
+	// 4.b. Add/Update all documents
+	addAllDocuments: function(req, res, payload){
+	    elasticClient.bulk({
+	        body: payload/*,
+	        index: indexName,
+	        type: docType,
+	        body: payload*/
+	    }).then(function (resp) {
+	        // console.log(resp);
+	        res.status(200);
+	        return res.json(resp)
+	    }, function (err) {
+	        // console.log(err.message);
+	        res.status(500)
+	        return res.json(err)
+	    })
+	    .catch((err) => {
+	    	console.log('Error in adding all docs', err)
+	    })
 	},
 
 

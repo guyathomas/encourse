@@ -15,7 +15,7 @@ exports.courseByProvider = function (req, res) {
 }
 
 exports.filteredCourses = function (req, res) {
-	// utilities.fetchCoursera(); //Don't delete
+	utilities.fetchCoursera(); //Don't delete
 	// utilities.fetchUdacity(); //Don't delete
 
 	var searchQuery = req.body.searchQuery;
@@ -46,23 +46,27 @@ exports.filteredCourses = function (req, res) {
 }
 
 exports.elasticSearch = function (req, res) {
-	// utilities.fetchCoursera(); //Don't delete
+	utilities.fetchCoursera(); //Don't delete
 	// utilities.fetchUdacity(); //Don't delete
 
 	var searchQuery = req.body.searchQuery;
-	console.log(splitQuery)
+	console.log(searchQuery)
 
 	axios.post('http://localhost:3001/elastic/search', {
-    	"index": "courses",
-    	"type": "coursera",
-        "payload": {
-        	"query": {
-        		"match": {
-            		"description": searchQuery,
-            		"operator": "and"
-        		}
-        	}	
-        }
+		"index": "courses",
+		"type": "coursera",
+		"payload": {
+			"query": {
+				"bool": {
+					"should": [{
+						"term": {
+							"description": searchQuery
+						}
+					}],
+					"minimum_should_match": 1
+				}
+			}
+		}
   	})
 	.then((res, err) => {
 		if (err) {

@@ -13,15 +13,15 @@ const descriptionTruncate = function(description) {
 }
 
 const createCourseFromArr = function (array) {
-	for (var i = 0; i < array.length; i++) {
-		Course.create(array[i], function(err, course) {
-			if (err) {
-				console.log('there was an err', err)
-			} else {
-				console.log('Created course')
-			}
-		})
-	}
+	// for (var i = 0; i < array.length; i++) {
+	// 	Course.create(array[i], function(err, course) {
+	// 		if (err) {
+	// 			console.log('there was an err', err)
+	// 		} else {
+	// 			console.log('Created course')
+	// 		}
+	// 	})
+	// }
 }
 
 const formatCoursera = function (rawCoursePage, callback) {
@@ -37,6 +37,7 @@ const formatCoursera = function (rawCoursePage, callback) {
 		shortCourse.image = rawCoursePage[i].photoUrl || 'https://pbs.twimg.com/profile_images/579039906804023296/RWDlntRx.jpeg';
 		shortCourse.difficulty = rawCoursePage[i].specializations.length === 0 ? 'Anyone' : 'Check Course Site';
 		shortCourse.duration = rawCoursePage[i].workload;
+		courses.push({ "index" : { "_index" : "courses", "_type" : "coursera" } })
 		courses.push(shortCourse);
 	}
 	callback(courses);
@@ -97,14 +98,24 @@ exports.fetchCoursera = function(recursive, isEnd, start) {
 		Promise.all(requests)
 		.then((coursePages) => {
 			let courseArr = [];
-			coursePages.forEach((page) => {
+			coursePages.forEach((page, index) => {
 				const pageData = page.data.elements;
 				formatCoursera(pageData, (cleanData) => {
-					courseArr.push(cleanData)
+					courseArr = courseArr.concat(cleanData)
 				})
 			})
-			Course.find({platform:'coursera'}).remove().exec();
-			createCourseFromArr(courseArr)
+			axios.post('http://localhost:3001/elastic/addAll', {
+		        "payload": courseArr
+		  	})
+		  	.then((res) => {
+		  		console.log('After adding to the DB')
+		  	})
+		  	.catch((err) => {console.log('The error in adding payload to the db')})
+			
+
+
+			// Course.find({platform:'coursera'}).remove().exec();
+			// createCourseFromArr(courseArr)
 		})
 		.catch((err) => {
 			console.log('Error in creating/running the request array', err)
