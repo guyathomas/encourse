@@ -31,9 +31,8 @@ routes.post('/add', (req, res) => {
     //  [ 4 ] Add data to index
     const payload = req.body.payload || {};
     const index = req.body.index || 'courses';
-    const _id = req.body._id;
     const docType = req.body.type || 'misc';
-    ElasticSearch.addDocument(req, res, index, _id, docType, payload);
+    ElasticSearch.addDocument(req, res, index, docType, payload);
     return null; 
 });
 
@@ -41,16 +40,15 @@ routes.post('/update', (req, res) => {
     //  [ 5 ] Update a document
     const payload = req.body.payload || {};
     const index = req.body.index || 'courses';
-    const _id = req.body._id;
-    const docType = req.body.type || 'misc';
-    ElasticSearch.updateDocument(req, res, index, _id, docType, payload);
+    const docType = req.body.type || 'type';
+    ElasticSearch.updateDocument(req, res, index, docType, payload);
     return null; 
 });
 
 routes.post('/search', (req, res) => {
     // [ 6 ] Search an index
-    const payload = req.body.payload || {};
     const index = req.body.index || 'courses';
+    const payload = req.body.payload || {"query": {"match_all": {}}}
     const docType = req.body.type || 'misc';
     ElasticSearch.search(req, res, index, docType, payload);
 });
@@ -58,9 +56,8 @@ routes.post('/search', (req, res) => {
 routes.post('/delete-document', (req, res) => {
     //  Delete a document
     const index = req.body.index || 'courses';
-    const _id = req.body._id;
     const docType = req.body.type || 'misc';
-    ElasticSearch.deleteDocument(req, res, index, _id, docType);
+    ElasticSearch.deleteDocument(req, res, index, docType);
     return null; 
 });
 

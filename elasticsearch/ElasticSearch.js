@@ -70,11 +70,11 @@ module.exports = {
 	},
 
 	// 4. Add/Update a document
-	addDocument: function(req, res, indexName, _id, docType, payload){
+	addDocument: function(req, res, indexName, docType, payload){
+	console.log('in addDocument', indexName, docType, payload)
 	    elasticClient.index({
 	        index: indexName,
 	        type: docType,
-	        id: _id,
 	        body: payload
 	    }).then(function (resp) {
 	        // console.log(resp);
@@ -90,11 +90,10 @@ module.exports = {
 
 
 	// 5. Update a document
-	updateDocument: function(req, res, index, _id, docType, payload){
+	updateDocument: function(req, res, index, docType, payload){
 		elasticClient.update({
 		  index: index,
 		  type: docType,
-		  id: _id,
 		  body: payload
 		}, function (err, resp) {
 		  	if(err) return res.json(err);
@@ -123,11 +122,10 @@ module.exports = {
 	 */
 
 	 // Delete a document from an index
-	deleteDocument: function(req, res, index, _id, docType){
+	deleteDocument: function(req, res, index, docType){
 		elasticClient.delete({
 		    index: index,
-			type: docType,
-			id: _id,
+			type: docType
 		}, function(err, resp) {
 		    if (err) return res.json(err);
 		    return res.json(resp);
