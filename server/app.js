@@ -25,15 +25,11 @@ app.post('/search', handler.filteredCourses);
 axios.get('localhost:3001/ping')
 .then((res, err) => {
 	if (err) {
-		console.log('error in ping', err)
+		console.log('No Connection between ES and Web Service', err)
 	} else {
-		console.log('res from ES', res)
+		console.log('Web service can contact ES', res)
 	}
 })
-// app.get('/courses', handler.allCourses);
-// app.get('/courses/:provider', handler.courseByProvider);
-
-
 
 //Set up listening
 app.listen(port, function () {

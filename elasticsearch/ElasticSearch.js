@@ -1,3 +1,4 @@
+//Referenced from: https://medium.com/@siddharthac6/elasticsearch-node-js-b16ea8bec427
 var elasticsearch = require('elasticsearch');
 var elasticClient = new elasticsearch.Client({
   	host: 'localhost:9200',
