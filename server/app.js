@@ -7,7 +7,6 @@ try {
 
 var express = require('express');
 var app = express();
-const axios = require('axios')
 var handler = require('./reqHandler');
 var bodyParser = require('body-parser')
 var path = require('path');
@@ -20,16 +19,8 @@ app.use(bodyParser.json())
 
 app.use(express.static(path.join(__dirname, '../')));
 
-app.post('/search', handler.filteredCourses);
-
-axios.get('http://localhost:3001/elastic/ping')
-.then((res, err) => {
-	if (err) {
-		console.log('No Connection between ES and Web Service', err)
-	} else {
-		console.log('Web service can contact ES')
-	}
-})
+app.post('/search', handler.elasticSearch);
+// app.post('/search', handler.filteredCourses);
 
 //Set up listening
 app.listen(port, function () {
