@@ -12,16 +12,14 @@ const descriptionTruncate = function(description) {
 	return description;
 }
 
-const createCourseFromArr = function (array) {
-	// for (var i = 0; i < array.length; i++) {
-	// 	Course.create(array[i], function(err, course) {
-	// 		if (err) {
-	// 			console.log('there was an err', err)
-	// 		} else {
-	// 			console.log('Created course')
-	// 		}
-	// 	})
-	// }
+const addToDB = function (payload) {
+	axios.post('http://localhost:3001/elastic/addAll', {
+        "payload": payload
+  	})
+  	.then((res) => {
+  		console.log('After adding to the DB')
+  	})
+  	.catch((err) => {console.log('The error in adding payload to the db')})
 }
 
 const formatCoursera = function (rawCoursePage, callback) {
@@ -44,10 +42,14 @@ const formatCoursera = function (rawCoursePage, callback) {
 }
 
 const formatUdacity = function (courses) {
+	console.log('in format udacity')
 	const courseArr = [];
 	for (var i = 0; i < courses.length; i++) {
 		var shortCourse = {};
-
+		if (courses[i].short_summary === undefined) {
+			console.log('courses[i]', courses[i]); 
+			throw new Error('whoops. courses is undefined')
+		}
 		shortCourse.platform = "udacity";
 		shortCourse.title = courses[i].title;
 		shortCourse.description = descriptionTruncate(courses[i].short_summary);
@@ -55,23 +57,22 @@ const formatUdacity = function (courses) {
 		shortCourse.image = courses[i].image
 		shortCourse.difficulty = courses[i].level;
 		shortCourse.duration = parseInt(courses[i].expected_duration) * 10 + ' hours';
+		courseArr.push({ "index" : { "_index" : "courses", "_type" : "udacity" } });
 		courseArr.push(shortCourse);
 	}
-
 	return courseArr;
 }
 
 exports.fetchUdacity = function() {
 	//Get the data from Udacities API and convert into format for our database
 	 axios.get('https://www.udacity.com/public-api/v0/courses')
-	 .then(function(body) {
-		var data = body.data.courses;
+	 .then(function(res) {
+		var data = res.data.courses;
 		const formattedCourses = formatUdacity(data)
 	 	return formattedCourses;
 	 })
 	 .then(function(courseArr) {
-	 	Course.find({platform:"udacity"}).remove().exec();
-	 	createCourseFromArr(courseArr);
+	 	addToDB(courseArr)
 	 })
 	 .catch(function(err) {
 	 	console.log('there was an creating/fetching udacity', err);
@@ -104,18 +105,7 @@ exports.fetchCoursera = function(recursive, isEnd, start) {
 					courseArr = courseArr.concat(cleanData)
 				})
 			})
-			axios.post('http://localhost:3001/elastic/addAll', {
-		        "payload": courseArr
-		  	})
-		  	.then((res) => {
-		  		console.log('After adding to the DB')
-		  	})
-		  	.catch((err) => {console.log('The error in adding payload to the db')})
-			
-
-
-			// Course.find({platform:'coursera'}).remove().exec();
-			// createCourseFromArr(courseArr)
+			addToDB(courseArr)
 		})
 		.catch((err) => {
 			console.log('Error in creating/running the request array', err)

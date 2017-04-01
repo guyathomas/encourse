@@ -18,7 +18,6 @@ routes.get('/ping', (req, res) => {
 routes.post('/index/init', (req, res) => {
     // [ 1 ] Create an index
     const index = req.body.index;
-    console.log('The index to be created is', index)
     ElasticSearch.initIndex(req, res, index);
 });
 
@@ -66,7 +65,6 @@ routes.post('/search', (req, res) => {
     // const index = req.body.index || 'courses';
     const payload = req.body.payload
     // const docType = req.body.type || 'misc';
-    console.log('The payload for the search is', payload)
     ElasticSearch.search(req, res, payload);
 });
 

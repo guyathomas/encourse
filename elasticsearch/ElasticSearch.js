@@ -27,11 +27,9 @@ module.exports = {
 	    elasticClient.indices.create({
 	        index: indexName
 	    }).then(function (resp) {
-	        // console.log(resp);
 	        res.status(200)
 	        return res.json(resp)
 	    }, function (err) {
-	        // console.log(err.message);
 	        res.status(500)
 	        return res.json(err)
 	    });
@@ -42,11 +40,9 @@ module.exports = {
 	    elasticClient.indices.exists({
 	        index: indexName
 	    }).then(function (resp) {
-	        // console.log(resp);
 	        res.status(200);
 	        return res.json(resp)
 	    }, function (err) {
-	        // console.log(err.message);
 	        res.status(500)
 	        return res.json(err)
 	    });
@@ -75,11 +71,9 @@ module.exports = {
 	        type: docType,
 	        body: payload
 	    }).then(function (resp) {
-	        // console.log(resp);
 	        res.status(200);
 	        return res.json(resp)
 	    }, function (err) {
-	        // console.log(err.message);
 	        res.status(500)
 	        return res.json(err)
 	    });
@@ -87,15 +81,12 @@ module.exports = {
 
 	// 4.b. Add/Update all documents
 	addAllDocuments: function(req, res, payload){
-		console.log('payload[0],payload[1],payload[2],payload[3]', payload[0],payload[1],payload[2],payload[3])
 	    elasticClient.bulk({
 	        body: payload
 	    }).then(function (resp) {
-	        // console.log(resp);
 	        res.status(200);
 	        return res.json(resp)
 	    }, function (err) {
-	        // console.log(err.message);
 	        res.status(500)
 	        return res.json(err)
 	    })
@@ -122,10 +113,8 @@ module.exports = {
 	search: function(req, res, payload){
 		elasticClient.search(payload)
 		.then(function (resp) {
-	        console.log(resp);
 	        return res.json(resp)
 	    }, function (err) {
-	        console.log(err.message);
 	        return res.json(err.message)
 	    });
 	},
