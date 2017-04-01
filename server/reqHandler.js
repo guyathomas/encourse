@@ -9,11 +9,6 @@ exports.allCourses = function (req, res) {
 	res.send('allCourses');
 }
 
-exports.courseByProvider = function (req, res) {
-	//Get all of the courses from the db
-	res.send(req.params);
-}
-
 exports.filteredCourses = function (req, res) {
 	// utilities.fetchCoursera(); //Don't delete
 	// utilities.fetchUdacity(); //Don't delete
@@ -50,18 +45,20 @@ exports.elasticSearch = function (clientReq, clientRes) {
 	// utilities.fetchUdacity(); //Don't delete
 
 	var searchQuery = clientReq.body.searchQuery;
-	console.log(searchQuery)
+	console.log('This is the search query string:', searchQuery)
 
 	axios.post('http://localhost:3001/elastic/search', {
-	"index": "encourse",
-	"type": "course",
-	"payload": {
-		"query": {
-			"match": {
-				"description": {
-					"query": searchQuery
-					}
-				}
+		//TODO: Possibly use https://github.com/danpaz/bodybuilder to build this as the queries become more complex
+		"payload": {
+			"index": "courses",
+			"body": {
+		    "query": {
+		          "query_string": {
+		          	"fields": ["description", "title^4"],
+		            "query": searchQuery + '*',
+		            "analyze_wildcard": true
+		          }
+		        }
 			}
 		}
 	})
@@ -76,5 +73,8 @@ exports.elasticSearch = function (clientReq, clientRes) {
 			})
 				clientRes.status(200).send(pluckedData)
 		}
+	})
+	.catch((esErr) => {
+		console.log('There was an error in the request to the ES server', esErr)
 	})
 }

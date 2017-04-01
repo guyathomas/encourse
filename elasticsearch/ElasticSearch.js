@@ -87,11 +87,9 @@ module.exports = {
 
 	// 4.b. Add/Update all documents
 	addAllDocuments: function(req, res, payload){
+		console.log('payload[0],payload[1],payload[2],payload[3]', payload[0],payload[1],payload[2],payload[3])
 	    elasticClient.bulk({
-	        body: payload/*,
-	        index: indexName,
-	        type: docType,
-	        body: payload*/
+	        body: payload
 	    }).then(function (resp) {
 	        // console.log(resp);
 	        res.status(200);
@@ -121,12 +119,9 @@ module.exports = {
 	},
 
 	// 6. Search
-	search: function(req, res, indexName, docType, payload){
-		elasticClient.search({
-	        index: indexName,
-	        type: docType,
-	        body: payload
-	    }).then(function (resp) {
+	search: function(req, res, payload){
+		elasticClient.search(payload)
+		.then(function (resp) {
 	        console.log(resp);
 	        return res.json(resp)
 	    }, function (err) {
@@ -148,6 +143,20 @@ module.exports = {
 		}, function(err, resp) {
 		    if (err) return res.json(err);
 		    return res.json(resp);
+		});
+	},
+
+	// Delete index
+	deleteIndex: function(req, res){
+		elasticClient.indices.delete({
+		    index: req.index
+		}, function(err, resp) {
+		    if (err) {
+		        console.error(err.message);
+		    } else {
+		        console.log('Indexes have been deleted!', resp);
+		        return res.json(resp)
+		    }
 		});
 	},
 

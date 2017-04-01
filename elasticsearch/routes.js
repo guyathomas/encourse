@@ -30,7 +30,7 @@ routes.post('/index/check', (req, res) => {
 routes.post('/index/mapping', (req, res) => {
     //  [ 3 ] Preparing index and its mapping (basically setting data-types of each attributes and more)
     const payload = req.body.payload || {};
-    const index = req.body.index || 'encourse';
+    const index = req.body.index || 'courses';
     ElasticSearch.initMapping(req, res, index, payload);
     return null;
 });
@@ -38,8 +38,8 @@ routes.post('/index/mapping', (req, res) => {
 routes.post('/add', (req, res) => {
     //  [ 4.a ] Add data to index
     const payload = req.body.payload || {};
-    const index = req.body.index || 'encourse';
-    const docType = req.body.type || 'course';
+    const index = req.body.index || 'courses';
+    const docType = req.body.type || 'misc';
     ElasticSearch.addDocument(req, res, index, docType, payload);
     return null; 
 });
@@ -55,24 +55,25 @@ routes.post('/addAll', (req, res) => {
 routes.post('/update', (req, res) => {
     //  [ 5 ] Update a document
     const payload = req.body.payload || {};
-    const index = req.body.index || 'encourse';
-    const docType = req.body.type || 'type';
+    const index = req.body.index || 'courses';
+    const docType = req.body.type || 'misc';
     ElasticSearch.updateDocument(req, res, index, docType, payload);
     return null; 
 });
 
 routes.post('/search', (req, res) => {
     // [ 6 ] Search an index
-    const index = req.body.index || 'encourse';
-    const payload = req.body.payload || {"query": {"match_all": {}}}
-    const docType = req.body.type || 'course';
-    ElasticSearch.search(req, res, index, docType, payload);
+    // const index = req.body.index || 'courses';
+    const payload = req.body.payload
+    // const docType = req.body.type || 'misc';
+    console.log('The payload for the search is', payload)
+    ElasticSearch.search(req, res, payload);
 });
 
 routes.post('/delete-document', (req, res) => {
     //  Delete a document
-    const index = req.body.index || 'encourse';
-    const docType = req.body.type || 'course';
+    const index = req.body.index || 'courses';
+    const docType = req.body.type || 'misc';
     ElasticSearch.deleteDocument(req, res, index, docType);
     return null; 
 });
