@@ -91,7 +91,7 @@ exports.fetchUdacityNano = function() {
 	 })
 }
 
-exports.fetchCoursera = function(recursive, isEnd, start) {
+exports.fetchCoursera = function(recursive) {
 
 	let courseCount = 0;
 

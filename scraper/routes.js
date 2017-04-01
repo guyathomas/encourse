@@ -2,6 +2,7 @@
 const routes = require('express').Router()
 
 routes.get('/start:type', (req, res) => {
+    
 });
 
 // routes.post('/index/init', (req, res) => {

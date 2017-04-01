@@ -9,6 +9,7 @@ var express = require('express');
 var app = express();
 const routes = require('./routes');
 const port = process.env.PORT || 3002
+const scrapers = require('./scrapers')
 
 app.use(bodyParser.json({limit: '5mb', extended: true}))
 app.use((req, res, next) => {
@@ -16,6 +17,8 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+
+scrapers.udemy();
 
 app.use('/api', routes)
 app.use('/*', (req, res) => {res.status(404).send('Route not found')})
