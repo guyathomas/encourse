@@ -8,7 +8,8 @@
     "build-w": "babel --watch src --out-dir compiled",
     "build": "babel src --out-dir compiled",
     "start": "npm run build && NODE_ENV=production node server/app.js",
-    "start-dev": "NODE_ENV=development && concurrently \"nodemon server/app.js\" \"nodemon elasticsearch/app.js\""
+    "start-dev": "NODE_ENV=development && concurrently \"nodemon server/app.js\" \"nodemon elasticsearch/app.js\"",
+    "scraper": "nodemon scraper/app.js"
   },
   "repository": {
     "type": "git",

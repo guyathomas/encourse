@@ -46,7 +46,7 @@ exports.elasticSearch = function (clientReq, clientRes) {
 	// utilities.fetchUdacityNano(); //Don't delete
 	
 	var searchQuery = clientReq.body.searchQuery;
-	var resultCount = clientReq.body.resultCount || 15;
+	var resultCount = clientReq.body.resultCount || 50;
 
 	axios.post('http://localhost:3001/elastic/search', {
 		//TODO: Possibly use https://github.com/danpaz/bodybuilder to build this as the queries become more complex
