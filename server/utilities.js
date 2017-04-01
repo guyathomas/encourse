@@ -41,23 +41,19 @@ const formatCoursera = function (rawCoursePage, callback) {
 	callback(courses);
 }
 
-const formatUdacity = function (courses) {
-	console.log('in format udacity')
+const formatUdacity = function (courses, isNanodegree) {
 	const courseArr = [];
 	for (var i = 0; i < courses.length; i++) {
 		var shortCourse = {};
-		if (courses[i].short_summary === undefined) {
-			console.log('courses[i]', courses[i]); 
-			throw new Error('whoops. courses is undefined')
-		}
-		shortCourse.platform = "udacity";
+		shortCourse.platform = isNanodegree? "udacity nanodegree" : "udacity"
 		shortCourse.title = courses[i].title;
 		shortCourse.description = descriptionTruncate(courses[i].short_summary);
 		shortCourse.link = courses[i].homepage;
 		shortCourse.image = courses[i].image
 		shortCourse.difficulty = courses[i].level;
-		shortCourse.duration = parseInt(courses[i].expected_duration) * 10 + ' hours';
-		courseArr.push({ "index" : { "_index" : "courses", "_type" : "udacity" } });
+		shortCourse.duration = courses[i].expected_duration + ' ' + courses[i].expected_duration_unit;
+		const instruction = { "index" : { "_index" : "courses", "_type" : (isNanodegree ? "udacity nanodegree" : "udacity") } }
+		courseArr.push(instruction);
 		courseArr.push(shortCourse);
 	}
 	return courseArr;
@@ -69,6 +65,22 @@ exports.fetchUdacity = function() {
 	 .then(function(res) {
 		var data = res.data.courses;
 		const formattedCourses = formatUdacity(data)
+	 	return formattedCourses;
+	 })
+	 .then(function(courseArr) {
+	 	addToDB(courseArr)
+	 })
+	 .catch(function(err) {
+	 	console.log('there was an creating/fetching udacity', err);
+	 })
+}
+
+exports.fetchUdacityNano = function() {
+	//Get the data from Udacities API and convert into format for our database
+	 axios.get('https://www.udacity.com/public-api/v0/courses')
+	 .then(function(res) {
+		var data = res.data.degrees;
+		const formattedCourses = formatUdacity(data, true)
 	 	return formattedCourses;
 	 })
 	 .then(function(courseArr) {

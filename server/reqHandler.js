@@ -43,7 +43,8 @@ exports.filteredCourses = function (req, res) {
 exports.elasticSearch = function (clientReq, clientRes) {
 	// utilities.fetchCoursera(); //Don't delete
 	// utilities.fetchUdacity(); //Don't delete
-
+	// utilities.fetchUdacityNano(); //Don't delete
+	
 	var searchQuery = clientReq.body.searchQuery;
 	var resultCount = clientReq.body.resultCount || 15;
 
