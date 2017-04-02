@@ -36,10 +36,11 @@ module.exports = {
 		let results = [];
 		// const topics = ["Academics","Business","Design","Development","Health & Fitness","IT & Software","Language","Lifestyle","Marketing","Music","Office Productivity","Personal Development","Photography","Teacher Training","Test Prep"]
 		const topics = ["Development"]
-
+		const pageSize = 100;
+		const pages = 1;
 		topics.forEach((topic) => {
-			let courseCount = 0;
-			axios.get('https://www.udemy.com/api-2.0/courses?page_size=1&language=en&ordering=highest-rated&category=' +topic, {
+			//Determine how many requests will need to be made
+			axios.get(`https://www.udemy.com/api-2.0/courses?page_size=1&language=en&ordering=highest-rated&category=${topic}`, {
 				withCredentials: true,
 				    auth: {
 				      username: process.env.UDEMY_USERNAME,
@@ -47,12 +48,13 @@ module.exports = {
 				    }
 			})
 			.then((initRes) => {
-				pageCount = 1/*changed for testing: res.data.count / 100*/;
+				//Create all of the promises for the requests
+				pageCount = parseInt(res.data.count) / pageSize;
 				const requests = [];
 					for (var currPage = 0; currPage < pageCount; currPage++) {
 						const pageQuery = new Promise((resolve, reject) => {
 							console.log(currPage)
-							axios.get(`https://www.udemy.com/api-2.0/courses?page=${currPage}&page_size=${4/*100*/}&language=en&ordering=highest-rated&category=${topic}`, {
+							axios.get(`https://www.udemy.com/api-2.0/courses?page=${currPage}&page_size=${pageSize}&language=en&ordering=highest-rated&category=${topic}`, {
 								withCredentials: true,
 								    auth: {
 								      username: process.env.UDEMY_USERNAME,
@@ -68,25 +70,28 @@ module.exports = {
 
 			})
 			.then((apiRequests) => {
+				//Process all of the API requests
 				Promise.all(apiRequests)
 				.then((apiPages) => {
+					//Populate the final data object with prelim data from API
 					let courseArr = [];
 					apiPages.forEach((page, index) => {
 						const pageData = page.data.results;
 						formatUdemy(pageData, topic, (cleanData) => {
 							courseArr = courseArr.concat(cleanData)
-							// console.log(courseArr)
 						})
 					})
 					return courseArr;
 				})
 				.then((apiData) => {
+					//Create the crawling request promises
 					const crawlStack = [];
-					for (var i = 1; i < apiData.length - 1; i++, i++) {
+					for (var i = 1; i < apiData.length - 1; i+= 2) {
 						// crawlStack.push(scrapeData(apiData[i].link))
 						crawlStack.push(scrapeData(apiData[i].link))
 					}
 
+					//Crawl all of the target pages and augment the API data
 					Promise.all(crawlStack)
 					.then((pages) => {
 						pages.forEach((page, i) => {
@@ -94,8 +99,11 @@ module.exports = {
 							apiData[apiRef].description = page[0]
 							apiData[apiRef].learnings = page[1]
 							apiData[apiRef].duration = page[2]
-							console.log('apiData[1]', apiData[apiRef])
 						})
+						return apiData;
+					})
+					.then((augmentedApiData) => {
+						console.log('This is the final result', augmentedApiData)
 					})
 				})
 				.then((crawlStack) => {
