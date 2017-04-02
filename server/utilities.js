@@ -6,20 +6,21 @@ const axios = require('axios');
 //TODO: inmplement truncate that limits the descriptions to 200 characters
 
 const descriptionTruncate = function(description) {
-	if (description.length > 300 ) {
-		description = description.slice(0,300) + '...';
+	if (description.length > 350 ) {
+		description = description.slice(0,350) + '...';
 	}
 	return description;
 }
 
 const addToDB = function (payload) {
+	console.log(payload)
 	axios.post('http://localhost:3001/elastic/addAll', {
         "payload": payload
   	})
   	.then((res) => {
-  		console.log('After adding to the DB')
+  		console.log('Courses have been added to the DB')
   	})
-  	.catch((err) => {console.log('The error in adding payload to the db')})
+  	.catch((err) => {console.log('The error in posting the payload to the db')})
 }
 
 const formatCoursera = function (rawCoursePage, callback) {
@@ -57,6 +58,21 @@ const formatUdacity = function (courses, isNanodegree) {
 		courseArr.push(shortCourse);
 	}
 	return courseArr;
+}
+
+exports.fetchUdemy = function() {
+	// const topics = ["Academics","Business","Design","Development","Health & Fitness","IT & Software","Language","Lifestyle","Marketing","Music","Office Productivity","Personal Development","Photography","Teacher Training","Test Prep"]
+	const topics = ["Marketing"]
+	topics.forEach((topic) => {
+		axios.get('http://localhost:3002/scrape/udemy/' + topic)
+		.then(function(res) {
+			console.log('Recieved the response of scraped courses')
+			addToDB(res.data)
+		})
+		.catch(function(err) {
+			console.log('there was an creating/fetching udacity', err);
+		})
+	})
 }
 
 exports.fetchUdacity = function() {

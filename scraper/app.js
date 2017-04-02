@@ -9,7 +9,6 @@ var express = require('express');
 var app = express();
 const routes = require('./routes');
 const port = process.env.PORT || 3002
-const scrapers = require('./scrapers')
 
 app.use(bodyParser.json({limit: '5mb', extended: true}))
 app.use((req, res, next) => {
@@ -18,9 +17,7 @@ app.use((req, res, next) => {
   next();
 });
 
-scrapers.udemy();
-
-app.use('/api', routes)
+app.use('/scrape', routes)
 app.use('/*', (req, res) => {res.status(404).send('Route not found')})
 
 //Set up listening
