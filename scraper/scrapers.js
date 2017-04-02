@@ -2,6 +2,7 @@ const res = require('./mockresponse.js')
 const Promise = require("bluebird");
 const axios = require('axios');
 const util = require('util');
+const scrapeData = require('./scrapeData.js')
 
 try {
     require('../env.js');
@@ -32,7 +33,6 @@ const formatUdemy = function (rawCoursePage, category, callback) {
 
 module.exports = {
 	udemy: function() {
-		const crawlStack = [];
 		let results = [];
 		// const topics = ["Academics","Business","Design","Development","Health & Fitness","IT & Software","Language","Lifestyle","Marketing","Music","Office Productivity","Personal Development","Photography","Teacher Training","Test Prep"]
 		const topics = ["Development"]
@@ -52,7 +52,7 @@ module.exports = {
 					for (var currPage = 0; currPage < pageCount; currPage++) {
 						const pageQuery = new Promise((resolve, reject) => {
 							console.log(currPage)
-							axios.get(`https://www.udemy.com/api-2.0/courses?page=${currPage}&page_size=100&language=en&ordering=highest-rated&category=${topic}`, {
+							axios.get(`https://www.udemy.com/api-2.0/courses?page=${currPage}&page_size=${4/*100*/}&language=en&ordering=highest-rated&category=${topic}`, {
 								withCredentials: true,
 								    auth: {
 								      username: process.env.UDEMY_USERNAME,
@@ -67,19 +67,39 @@ module.exports = {
 				return requests;
 
 			})
-			.then((requests) => {
-				Promise.all(requests)
-				.then((coursePages) => {
-					console.log('coursePages',  coursePages[0].data.results)
+			.then((apiRequests) => {
+				Promise.all(apiRequests)
+				.then((apiPages) => {
 					let courseArr = [];
-					coursePages.forEach((page, index) => {
+					apiPages.forEach((page, index) => {
 						const pageData = page.data.results;
 						formatUdemy(pageData, topic, (cleanData) => {
 							courseArr = courseArr.concat(cleanData)
+							// console.log(courseArr)
 						})
 					})
-					console.log(courseArr)
-					// addToDB(courseArr)
+					return courseArr;
+				})
+				.then((apiData) => {
+					const crawlStack = [];
+					for (var i = 1; i < apiData.length - 1; i++, i++) {
+						// crawlStack.push(scrapeData(apiData[i].link))
+						crawlStack.push(scrapeData(apiData[i].link))
+					}
+
+					Promise.all(crawlStack)
+					.then((pages) => {
+						pages.forEach((page, i) => {
+							const apiRef = i * 2 + 1;
+							apiData[apiRef].description = page[0]
+							apiData[apiRef].learnings = page[1]
+							apiData[apiRef].duration = page[2]
+							console.log('apiData[1]', apiData[apiRef])
+						})
+					})
+				})
+				.then((crawlStack) => {
+					console.log('The crawlStack is', crawlStack)
 				})
 				.catch((err) => {
 					console.log('Error in creating/running the request array', err)
@@ -91,7 +111,7 @@ module.exports = {
 			//Prepare an array of promises for each page
 				//Make all of these requests
 				//With the responses
-					//Add the URL to the crawlstack
+					//Add the URL to the crawlStack
 	}
 }
 
