@@ -1,8 +1,8 @@
+const request = require('request');
 const cheerio = require('cheerio');
-var request = require('request');
 const Promise = require("bluebird");
 
-function scrapeData (url, progress, total) {
+function scrapeUdemyCourse (url, progress, total) {
     return new Promise((resolve, reject) => {
         request(url, function (error, response, html) {
             if (!error && response.statusCode == 200) {
@@ -23,13 +23,10 @@ function scrapeData (url, progress, total) {
                 $('.incentives__text').each(function(i, element){
                  //Only want the first item in the array (duration)
                     if (i === 0) {
-                        // const aboutFields = $(this).text().split('\n').map((el) => (el.trim())).filter((el) => (el != ''))
                         duration = $(element).text().split('\n').map((el) => (el.trim())).filter((el) => (el != ''))[0]
-                    // console.log('duration is going to be created as', duration)
                     }
                 });
                 console.log('Processed', (progress - 1)/ 2,'out of', total / 2)
-                // console.log('ABout to resolve on ',url, [learnings, description, duration])
                 resolve([description, learnings, duration])
            } else {
                 reject(error)
@@ -39,4 +36,4 @@ function scrapeData (url, progress, total) {
 })
 }
 
-module.exports = scrapeData;
+module.exports = scrapeUdemyCourse;

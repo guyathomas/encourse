@@ -2,7 +2,7 @@ const res = require('./mockresponse.js')
 const Promise = require("bluebird");
 const axios = require('axios');
 const util = require('util');
-const scrapeData = require('./scrapeData.js')
+const scrapeUdemyCourse = require('./scrapeUdemyCourse.js')
 
 try {
     require('../env.js');
@@ -94,8 +94,7 @@ module.exports = {
 				//Create the crawling request promises
 				const crawlStack = [];
 				for (var i = 1; i < apiData.length - 1; i+= 2) {
-					// crawlStack.push(scrapeData(apiData[i].link))
-					crawlStack.push(scrapeData(apiData[i].link, i ,apiData.length))
+					crawlStack.push(scrapeUdemyCourse(apiData[i].link, i ,apiData.length))
 				}
 
 				//Crawl all of the target pages and augment the API data

@@ -6,10 +6,4 @@ routes.get('/udemy/:courseType', (req, res) => {
 	scrapers.udemy(req, res);
 });
 
-// routes.post('/index/init', (req, res) => {
-    // // [ 1 ] Create an index
-    // const index = req.body.index;
-    // ElasticSearch.initIndex(req, res, index);
-// });
-
 module.exports = routes;
