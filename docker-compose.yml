@@ -10,13 +10,11 @@ services:
       - elasticserver
       - elastic
       # - mongo
-  # mongo:
-  #   image: mongo:latest
-  #   ports:
-  #     - "27017:27017"
-  #   volumes:
-  #     - mongdata:/var/lib/mongodb
-  #   restart: always
+  scraper:
+    build:
+      - ./scraper
+    ports:
+      - "3001:3001"
   elasticserver:
     build: ./elasticsearch
     ports:
@@ -24,11 +22,9 @@ services:
   elastic:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.4.0
     container_name: elasticsearch
-    # environment:
     volumes:
       - esdata:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
 volumes:
   esdata:
-  # mongdata:
