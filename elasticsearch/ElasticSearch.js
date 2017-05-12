@@ -7,6 +7,7 @@ var elasticClient = new elasticsearch.Client({
 });
 
 module.exports = {
+	client: elasticClient,
 	ping: function(req, res){
 		elasticClient.ping({
 		  	requestTimeout: 30000,

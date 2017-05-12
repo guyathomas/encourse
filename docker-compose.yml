@@ -7,16 +7,16 @@ services:
     ports:
       - "3000:3000"
     links:
-      - mongo
       - elasticserver
       - elastic
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongdata:/var/lib/mongodb
-    restart: always
+      # - mongo
+  # mongo:
+  #   image: mongo:latest
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongdata:/var/lib/mongodb
+  #   restart: always
   elasticserver:
     build: ./elasticsearch
     ports:
@@ -31,4 +31,4 @@ services:
       - "9200:9200"
 volumes:
   esdata:
-  mongdata:
+  # mongdata:

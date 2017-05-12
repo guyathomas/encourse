@@ -22,6 +22,9 @@ app.use(express.static(path.join(__dirname, '../')));
 app.post('/search', handler.elasticSearch);
 // app.post('/search', handler.filteredCourses);
 
+//Create the empty index if it doesn't exist already
+// handler.initElastic();
+
 //Set up listening
 app.listen(port, function () {
   console.log(`Web server listening on port ${port}!`);
