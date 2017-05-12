@@ -1,0 +1,34 @@
+version: '3' # specify docker-compose version
+
+# Define the services/containers to be run
+services:
+  web: # name of the first service
+    build: . # specify the directory of the Dockerfile
+    ports:
+      - "3000:3000"
+    links:
+      - mongo
+      - elasticserver
+      - elastic
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongdata:/var/lib/mongodb
+    restart: always
+  elasticserver:
+    build: ./elasticsearch
+    ports:
+      - "9199:9199"
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.4.0
+    container_name: elasticsearch
+    # environment:
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+volumes:
+  esdata:
+  mongdata:

@@ -1,0 +1,23 @@
+{
+    "AWSEBDockerrunVersion": 2,
+      "Authentication": {
+    "Bucket": "folio-bucket",
+    "Key": "docker/dockercfg"
+  },
+    "containerDefinitions": [
+    {
+      "name": "web",
+      "image": "stolemyusername/folio:<TAG>",
+      "essential": true,
+      "memory": 128,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 5000
+        }
+      ],
+      "mountPoints": [
+      ]
+    }
+    ]
+}

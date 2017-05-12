@@ -49,7 +49,7 @@ exports.elasticSearch = function (clientReq, clientRes) {
 	var searchQuery = clientReq.body.searchQuery;
 	var resultCount = clientReq.body.resultCount || 50;
 
-	axios.post('http://localhost:3001/elastic/search', {
+	axios.post('http://elasticserver:9199/elastic/search', {
 		//TODO: Possibly use https://github.com/danpaz/bodybuilder to build this as the queries become more complex
 		"payload": {
 			"index": "courses",

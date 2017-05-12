@@ -14,7 +14,7 @@ const descriptionTruncate = function(description) {
 
 const addToDB = function (payload) {
 	console.log(payload)
-	axios.post('http://localhost:3001/elastic/addAll', {
+	axios.post('http://elasticserver:9199/elastic/addAll', {
         "payload": payload
   	})
   	.then((res) => {
