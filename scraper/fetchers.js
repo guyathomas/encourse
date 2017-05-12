@@ -64,7 +64,7 @@ exports.fetchUdacityNano = function() {
 	 })
 }
 
-exports.fetchCoursera = function(recursive) {
+exports.fetchCoursera = function() {
 
 	let courseCount = 0;
 
@@ -73,13 +73,7 @@ exports.fetchCoursera = function(recursive) {
 	.then(() => {
 		const requests = [];
 		for (var queryPage = 0; queryPage < courseCount; queryPage+= 100) {
-			const pageQuery = new Promise((resolve, reject) => {
-				axios.get(`https://api.coursera.org/api/courses.v1?start=${queryPage}&limit=100&fields=description,photoUrl,previewLink,workload,startDate,specializations,primaryLanguages`)
-				.then((res) => {resolve(res)})
-				.catch((err) => {reject(err)})
-			})
-			
-			pageQuery()
+			axios.get(`https://api.coursera.org/api/courses.v1?start=${queryPage}&limit=100&fields=description,photoUrl,previewLink,workload,startDate,specializations,primaryLanguages`)
 			.then((result) => {
 				const pageData = result.data.elements;
 				formatCoursera(pageData, (cleanData) => {
@@ -90,8 +84,6 @@ exports.fetchCoursera = function(recursive) {
 				console.log('Error in creating/running the request array', err)
 			})
 		}
-
-
 	})
 	.catch((err) => {
 		console.log('Error in getting number of courses', err)
