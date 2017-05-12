@@ -2,15 +2,9 @@ const rp = require('request-promise');
 const Course = require('../db/models/course.js')
 const Promise = require("bluebird");
 const axios = require('axios');
+const format = require('./format')
 
 //TODO: inmplement truncate that limits the descriptions to 200 characters
-
-const descriptionTruncate = function(description) {
-	if (description.length > 350 ) {
-		description = description.slice(0,350) + '...';
-	}
-	return description;
-}
 
 const addToDB = function (payload) {
 	console.log(payload)
@@ -21,43 +15,6 @@ const addToDB = function (payload) {
   		console.log('Courses have been added to the DB')
   	})
   	.catch((err) => {console.log('The error in posting the payload to the db')})
-}
-
-const formatCoursera = function (rawCoursePage, callback) {
-	const courses = [];
-	for (var i = 0; i < rawCoursePage.length; i++) {
-		if (rawCoursePage[i].primaryLanguages.indexOf('en') < 0 ) {continue;} ////If english is not the main language, skip this course
-		var shortCourse = {};
-
-		shortCourse.platform = 'coursera'
-		shortCourse.title = rawCoursePage[i].name;//var result = str;
-		shortCourse.description = descriptionTruncate(rawCoursePage[i].description);
-		shortCourse.link = 'https://www.coursera.org/learn/' + rawCoursePage[i].slug;
-		shortCourse.image = rawCoursePage[i].photoUrl || 'https://pbs.twimg.com/profile_images/579039906804023296/RWDlntRx.jpeg';
-		shortCourse.difficulty = rawCoursePage[i].specializations.length === 0 ? 'Anyone' : 'Check Course Site';
-		shortCourse.duration = rawCoursePage[i].workload;
-		courses.push({ "index" : { "_index" : "courses", "_type" : "coursera" } })
-		courses.push(shortCourse);
-	}
-	callback(courses);
-}
-
-const formatUdacity = function (courses, isNanodegree) {
-	const courseArr = [];
-	for (var i = 0; i < courses.length; i++) {
-		var shortCourse = {};
-		shortCourse.platform = isNanodegree? "udacity nanodegree" : "udacity"
-		shortCourse.title = courses[i].title;
-		shortCourse.description = descriptionTruncate(courses[i].short_summary);
-		shortCourse.link = courses[i].homepage;
-		shortCourse.image = courses[i].image
-		shortCourse.difficulty = courses[i].level;
-		shortCourse.duration = courses[i].expected_duration + ' ' + courses[i].expected_duration_unit;
-		const instruction = { "index" : { "_index" : "courses", "_type" : (isNanodegree ? "udacity nanodegree" : "udacity") } }
-		courseArr.push(instruction);
-		courseArr.push(shortCourse);
-	}
-	return courseArr;
 }
 
 exports.fetchUdemy = function() {
@@ -80,7 +37,7 @@ exports.fetchUdacity = function() {
 	 axios.get('https://www.udacity.com/public-api/v0/courses')
 	 .then(function(res) {
 		var data = res.data.courses;
-		const formattedCourses = formatUdacity(data)
+		const formattedCourses = format.udacity(data)
 	 	return formattedCourses;
 	 })
 	 .then(function(courseArr) {
@@ -96,14 +53,14 @@ exports.fetchUdacityNano = function() {
 	 axios.get('https://www.udacity.com/public-api/v0/courses')
 	 .then(function(res) {
 		var data = res.data.degrees;
-		const formattedCourses = formatUdacity(data, true)
+		const formattedCourses = format.udacity(data, true)
 	 	return formattedCourses;
 	 })
 	 .then(function(courseArr) {
 	 	addToDB(courseArr)
 	 })
 	 .catch(function(err) {
-	 	console.log('there was an creating/fetching udacity', err);
+	 	console.log('there was an error creating/fetching udacity', err);
 	 })
 }
 
@@ -121,23 +78,20 @@ exports.fetchCoursera = function(recursive) {
 				.then((res) => {resolve(res)})
 				.catch((err) => {reject(err)})
 			})
-			requests.push(pageQuery)
-		}
-
-		Promise.all(requests)
-		.then((coursePages) => {
-			let courseArr = [];
-			coursePages.forEach((page, index) => {
-				const pageData = page.data.elements;
+			
+			pageQuery()
+			.then((result) => {
+				const pageData = result.data.elements;
 				formatCoursera(pageData, (cleanData) => {
-					courseArr = courseArr.concat(cleanData)
+					addToDB(courseArr)
 				})
 			})
-			addToDB(courseArr)
-		})
-		.catch((err) => {
-			console.log('Error in creating/running the request array', err)
-		})
+			.catch((err) => {
+				console.log('Error in creating/running the request array', err)
+			})
+		}
+
+
 	})
 	.catch((err) => {
 		console.log('Error in getting number of courses', err)
