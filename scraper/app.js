@@ -8,7 +8,7 @@ var bodyParser = require('body-parser')
 var express = require('express');
 var app = express();
 const routes = require('./routes');
-const port = process.env.PORT || 3002
+const port = process.env.PORT || 3001
 
 app.use(bodyParser.json({limit: '5mb', extended: true}))
 app.use((req, res, next) => {

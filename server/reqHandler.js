@@ -1,7 +1,6 @@
 // var db = require('../db/db.js')
 var Course = require('../db/models/course.js')
 var relevance = require('relevance');
-var utilities = require('./utilities.js')
 const axios = require('axios')
 
 exports.allCourses = function (req, res) {
@@ -10,11 +9,6 @@ exports.allCourses = function (req, res) {
 }
 
 exports.elasticSearch = function (clientReq, clientRes) {
-	// utilities.fetchCoursera(); //Don't delete
-	// utilities.fetchUdacity(); //Don't delete
-	// utilities.fetchUdacityNano(); //Don't delete
-	// utilities.fetchUdemy();
-	
 	var searchQuery = clientReq.body.searchQuery;
 	var resultCount = clientReq.body.resultCount || 50;
 
