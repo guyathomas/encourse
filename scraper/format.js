@@ -1,6 +1,6 @@
-const descriptionTruncate = function(description) {
-	if (description && description.length > 350 ) {
-		description = description.slice(0,350) + '...';
+exports.truncate = function(description, length = 350) {
+	if (description && description.length > length ) {
+		description = description.slice(0,length) + '...';
 	}
 	return description;
 }
@@ -9,7 +9,7 @@ exports.udemy = function (rawCoursePage, category, callback) {
 	const courses = [];
 	for (var i = 0; i < rawCoursePage.length; i++) {
 		var shortCourse = {};
-		// shortCourse.description = descriptionTruncate(rawCoursePage[i].description);
+		// shortCourse.description = truncate(rawCoursePage[i].description);
 		// shortCourse.difficulty = rawCoursePage[i].specializations.length === 0 ? 'Anyone' : 'Check Course Site';
 		// shortCourse.duration = rawCoursePage[i].workload;
 		shortCourse.platform = 'udemy'
@@ -34,7 +34,7 @@ exports.coursera = function (rawCoursePage, callback) {
 
 		shortCourse.platform = 'coursera'
 		shortCourse.title = rawCoursePage[i].name;//var result = str;
-		shortCourse.description = descriptionTruncate(rawCoursePage[i].description);
+		shortCourse.description = exports.truncate(rawCoursePage[i].description);
 		shortCourse.link = 'https://www.coursera.org/learn/' + rawCoursePage[i].slug;
 		shortCourse.image = rawCoursePage[i].photoUrl || 'https://pbs.twimg.com/profile_images/579039906804023296/RWDlntRx.jpeg';
 		shortCourse.difficulty = rawCoursePage[i].specializations.length === 0 ? 'Anyone' : 'Check Course Site';
@@ -51,7 +51,7 @@ exports.udacity = function (courses, isNanodegree) {
 		var shortCourse = {};
 		shortCourse.platform = isNanodegree? "udacity nanodegree" : "udacity"
 		shortCourse.title = courses[i].title;
-		shortCourse.description = descriptionTruncate(courses[i].short_summary);
+		shortCourse.description = exports.truncate(courses[i].short_summary);
 		shortCourse.link = courses[i].homepage;
 		shortCourse.image = courses[i].image
 		shortCourse.difficulty = courses[i].level;

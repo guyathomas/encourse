@@ -9,12 +9,14 @@ services:
     links:
       - elasticserver
       - elastic
-      # - mongo
+      - scraper
   scraper:
     build:
       - ./scraper
     ports:
       - "3001:3001"
+    links:
+      - elasticserver
   elasticserver:
     build: ./elasticsearch
     ports:
