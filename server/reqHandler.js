@@ -1,6 +1,4 @@
 // var db = require('../db/db.js')
-var Course = require('../db/models/course.js')
-var relevance = require('relevance');
 const axios = require('axios')
 
 exports.allCourses = function (req, res) {

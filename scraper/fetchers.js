@@ -1,4 +1,3 @@
-const rp = require('request-promise');
 const Promise = require("bluebird");
 const axios = require('axios');
 const format = require('./format')
@@ -14,17 +13,21 @@ const addToDB = function (payload) {
   	.then((res) => {
   		console.log('Courses have been added to the DB')
   	})
-  	.catch((err) => {console.log('The error in posting the payload to the db')})
+  	.catch((err) => {
+  		console.log('The error in posting the payload to the db')
+  		res.status(400).send('Error adding to DB')
+  	})
 }
 
 exports.udemy = function(req, res) {
+
 	let topics;
 	if (req.params.courseType) {
 		topics = [req.params.courseType]
 	} else {
 		topics = ["Academics","Business","Design","Development","Health & Fitness","IT & Software","Language","Lifestyle","Marketing","Music","Office Productivity","Personal Development","Photography","Teacher Training","Test Prep"]
 	}
-
+	console.log('process.env.UDEMY_USERNAME, process.env.UDEMY_PASSWORD', process.env.UDEMY_USERNAME, process.env.UDEMY_PASSWORD)
 	topics.forEach((topic) => {
 		let results = [];
 		const pageSize = 100;
@@ -79,7 +82,11 @@ exports.udemy = function(req, res) {
 					.catch((err) => {console.log('Error in formatting the data', err)})
 				}
 		})
-		.catch((err) => {console.log('Error in initial request', err)})
+		.then(() => res.status(200).send('Scrape complete'))
+		.catch((err) => {
+			console.log('Error in initial request', err)
+			res.status(400).send('Error in scrape')
+		})
 	})
 }
 
@@ -94,8 +101,10 @@ exports.udacity = function() {
 	 .then(function(courseArr) {
 	 	addToDB(courseArr)
 	 })
+	 .then(() => res.status(200).send('Scrape complete'))
 	 .catch(function(err) {
 	 	console.log('there was an creating/fetching udacity', err);
+	 	res.status(400).send('Error in scrape')
 	 })
 }
 
@@ -110,8 +119,10 @@ exports.udacityNano = function() {
 	 .then(function(courseArr) {
 	 	addToDB(courseArr)
 	 })
+	 .then(() => res.status(200).send('Scrape complete'))
 	 .catch(function(err) {
 	 	console.log('there was an error creating/fetching udacity', err);
+	 	res.status(400).send('Error in scrape')
 	 })
 }
 
@@ -135,7 +146,9 @@ exports.coursera = function() {
 			})
 		}
 	})
+	.then(() => res.status(200).send('Scrape complete'))
 	.catch((err) => {
-		console.log('Error in getting number of courses', err)
+		console.log('Error in getting number of courses', err);
+		res.status(400).send('Error in scrape')
 	})
 }

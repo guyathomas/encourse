@@ -24,7 +24,7 @@ app.use('/*', (req, res) => {res.status(404).send('Route not found')})
 // app.post('/search', handler.filteredCourses);
 
 //Initialize es
-ElasticSearch.client.indices.create({ index: 'courses' })
+// ElasticSearch.client.indices.create({ index: 'courses' })
 
 //Set up listening
 app.listen(port, function () {

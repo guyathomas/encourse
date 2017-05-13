@@ -10,8 +10,16 @@ services:
       - elasticserver
       - elastic
       - scraper
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.4.0
+    container_name: elasticsearch
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
   scraper:
     build: ./scraper
+    env_file: env.js
     ports:
       - "3001:3001"
     links:
@@ -20,12 +28,5 @@ services:
     build: ./elasticsearch
     ports:
       - "9199:9199"
-  elastic:
-    image: docker.elastic.co/elasticsearch/elasticsearch:5.4.0
-    container_name: elasticsearch
-    volumes:
-      - esdata:/usr/share/elasticsearch/data
-    ports:
-      - "9200:9200"
 volumes:
   esdata:

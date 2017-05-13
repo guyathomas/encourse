@@ -1,6 +1,6 @@
 //Only load environment variables if they exist
 try {
-    require('../env.js');
+    require('./env.js');
 } catch (ex) {
 	console.log('Environment variables file does not exist')
 }

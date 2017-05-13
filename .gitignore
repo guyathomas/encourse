@@ -18,4 +18,4 @@ compiled/
 .gitignore
 
 #environment variables
-env.js
+*env.js
