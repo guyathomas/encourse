@@ -11,8 +11,7 @@ services:
       - elastic
       - scraper
   scraper:
-    build:
-      - ./scraper
+    build: ./scraper
     ports:
       - "3001:3001"
     links:

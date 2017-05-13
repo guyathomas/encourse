@@ -6,21 +6,17 @@ routes.get('/udemy/:courseType', (req, res) => {
 	fetchers.udemy(req, res);
 });
 routes.get('/udacity', (req, res) => {
-	console.log('Route does not exist yet!')
-	res.status(400).send();
+	fetchers.udacity(req, res);
 });
-// routes.get('/udacitynano', (req, res) => {
-// 	console.log('Route does not exist yet!')
-// 	res.status(400).send();
-// });
-// routes.get('/coursera', (req, res) => {
-// 	console.log('Route does not exist yet!')
-// 	res.status(400).send();
-// });
-// routes.get('/edx', (req, res) => {
-// 	console.log('Route does not exist yet!')
-// 	res.status(400).send();
-// });
+routes.get('/udacityNano', (req, res) => {
+	fetchers.udacityNano(req, res);
+});
+routes.get('/coursera', (req, res) => {
+	fetchers.coursera(req, res);
+});
+routes.get('/edx', (req, res) => {
+	fetchers.edx(req, res);
+});
 
 
 module.exports = routes;

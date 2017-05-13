@@ -17,9 +17,14 @@ const addToDB = function (payload) {
   	.catch((err) => {console.log('The error in posting the payload to the db')})
 }
 
-exports.fetchUdemy = function() {
-	// const topics = ["Academics","Business","Design","Development","Health & Fitness","IT & Software","Language","Lifestyle","Marketing","Music","Office Productivity","Personal Development","Photography","Teacher Training","Test Prep"]
-	const topics = ["Marketing"]
+exports.udemy = function(req, res) {
+	let topics;
+	if (req.params.courseType) {
+		topics = [req.params.courseType]
+	} else {
+		topics = ["Academics","Business","Design","Development","Health & Fitness","IT & Software","Language","Lifestyle","Marketing","Music","Office Productivity","Personal Development","Photography","Teacher Training","Test Prep"]
+	}
+
 	topics.forEach((topic) => {
 		let results = [];
 		const pageSize = 100;
@@ -78,7 +83,7 @@ exports.fetchUdemy = function() {
 	})
 }
 
-exports.fetchUdacity = function() {
+exports.udacity = function() {
 	//Get the data from Udacities API and convert into format for our database
 	 axios.get('https://www.udacity.com/public-api/v0/courses')
 	 .then(function(res) {
@@ -94,7 +99,7 @@ exports.fetchUdacity = function() {
 	 })
 }
 
-exports.fetchUdacityNano = function() {
+exports.udacityNano = function() {
 	//Get the data from Udacities API and convert into format for our database
 	 axios.get('https://www.udacity.com/public-api/v0/courses')
 	 .then(function(res) {
@@ -110,7 +115,7 @@ exports.fetchUdacityNano = function() {
 	 })
 }
 
-exports.fetchCoursera = function() {
+exports.coursera = function() {
 
 	axios.get('https://api.coursera.org/api/courses.v1')
 	.then((res) => (res.data.paging.total))

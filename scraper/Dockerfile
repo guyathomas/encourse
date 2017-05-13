@@ -12,9 +12,6 @@ RUN npm install
 # Bundle app source
 COPY . /usr/src/app
 
-# Build and optimize react app
-RUN npm run build
-
 EXPOSE 3001
 
 # defined in package.json
