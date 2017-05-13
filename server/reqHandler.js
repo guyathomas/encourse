@@ -30,11 +30,13 @@ exports.elasticSearch = function (clientReq, clientRes) {
 		if (esErr) {
 			console.log('No Connection between ES and Web Service', esErr)
 		} else {
-			console.log('Web service can contact ES')
-			const pluckedData = esRes.data.hits.hits.map((hit) => {
-				return hit._source;
-			})
-				clientRes.status(200).send(pluckedData)
+			console.log('Web service can contact ES', esRes.data)
+			if (esRes.data) {
+				const pluckedData = esRes.data.hits.hits.map((hit) => {
+					return hit._source;
+				})
+					clientRes.status(200).send(pluckedData)
+			}
 		}
 	})
 	.catch((esErr) => {
