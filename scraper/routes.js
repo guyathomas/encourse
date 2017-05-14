@@ -2,7 +2,7 @@
 const routes = require('express').Router()
 const fetchers = require('./fetchers')
 
-routes.get('/udemy/:courseType', (req, res) => {
+routes.get('/udemy/:topic', (req, res) => {
 	fetchers.udemy(req, res);
 });
 routes.get('/udacity', (req, res) => {

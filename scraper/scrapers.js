@@ -1,15 +1,16 @@
 const request = require('request');
 const cheerio = require('cheerio');
 const Promise = require("bluebird");
+const axios = require('axios');
 
 module.exports = {
-    udemy: function(url, progress, total) {
+    udemyPage: function(url, progress, total) {
         return new Promise((resolve, reject) => {
             request(url, function(error, response, html) {
                 if (!error && response.statusCode == 200) {
-                    let description;
-                    let duration;
-                    let learnings;
+                    let description = 'Not Found';
+                    let duration = 'Not Found';
+                    let learnings = 'Not Found';
                     const $ = cheerio.load(html);
                     $('.js-simple-collapse-inner').each(function(i, element) {
                         //Loads 3 items. 1) What you will learn 2) Description 3) About the author
@@ -34,6 +35,20 @@ module.exports = {
                 }
                 return;
             });
+        })
+    },
+    udemyAPI: function(currPage, pageSize, topic) {
+        console.log('will query the api with', `https://www.udemy.com/api-2.0/courses?page=${currPage}&page_size=${pageSize}&language=en&ordering=highest-rated&category=${topic}`)
+        return new Promise((resolve, reject) => {
+            axios.get(`https://www.udemy.com/api-2.0/courses?page=${currPage}&page_size=${pageSize}&language=en&ordering=highest-rated&category=${topic}`, {
+                withCredentials: true,
+                    auth: {
+                      username: process.env.UDEMY_USERNAME,
+                      password: process.env.UDEMY_PASSWORD
+                    }
+            })
+            .catch((err) => {reject(err)})
+            .then((page) => {resolve(page)})
         })
     }
 }

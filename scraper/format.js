@@ -19,7 +19,7 @@ exports.udemy = function (rawCoursePage, category, callback) {
 		shortCourse.price = rawCoursePage[i].price
 		shortCourse.platformID = rawCoursePage[i].id
 		shortCourse.category = category
-		courses.push({ "index" : { "_index" : "courses", "_type" : "udemy" } })
+		// courses.push({ "index" : { "_index" : "courses", "_type" : "udemy" } })
 		courses.push(shortCourse);
 
 	}
@@ -39,25 +39,25 @@ exports.coursera = function (rawCoursePage, callback) {
 		shortCourse.image = rawCoursePage[i].photoUrl || 'https://pbs.twimg.com/profile_images/579039906804023296/RWDlntRx.jpeg';
 		shortCourse.difficulty = rawCoursePage[i].specializations.length === 0 ? 'Anyone' : 'Check Course Site';
 		shortCourse.duration = rawCoursePage[i].workload;
-		courses.push({ "index" : { "_index" : "courses", "_type" : "coursera" } })
+		// courses.push({ "index" : { "_index" : "courses", "_type" : "coursera" } })
 		courses.push(shortCourse);
 	}
 	callback(courses);
 }
 
-exports.udacity = function (courses, isNanodegree) {
+exports.udacity = function (courses, platform) {
 	const courseArr = [];
 	for (var i = 0; i < courses.length; i++) {
 		var shortCourse = {};
-		shortCourse.platform = isNanodegree? "udacity nanodegree" : "udacity"
+		shortCourse.platform = platform;
 		shortCourse.title = courses[i].title;
 		shortCourse.description = exports.truncate(courses[i].short_summary);
 		shortCourse.link = courses[i].homepage;
 		shortCourse.image = courses[i].image
 		shortCourse.difficulty = courses[i].level;
 		shortCourse.duration = courses[i].expected_duration + ' ' + courses[i].expected_duration_unit;
-		const instruction = { "index" : { "_index" : "courses", "_type" : (isNanodegree ? "udacity nanodegree" : "udacity") } }
-		courseArr.push(instruction);
+		// const instruction = { "index" : { "_index" : "courses", "_type" : (isNanodegree ? "udacity nanodegree" : "udacity") } }
+		// courseArr.push(instruction);
 		courseArr.push(shortCourse);
 	}
 	return courseArr;

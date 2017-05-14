@@ -1,6 +1,7 @@
 //Referenced from: https://medium.com/@siddharthac6/elasticsearch-node-js-b16ea8bec427
 const ElasticSearch = require('./ElasticSearch.js')
 const routes = require('express').Router()
+const utils = require('./utils')
 
 const matchAll = {
     "index": "encourse",
@@ -46,8 +47,10 @@ routes.post('/add', (req, res) => {
 routes.post('/addAll', (req, res) => {
     //  [ 4.b ] Add data to index
     const payload = req.body.payload || [];
+    const platform = req.body.platform || 'unknown'
+    const newPayload = utils.addInstructions(payload, platform, 'courses')
     // console.log('payload:', payload)
-    ElasticSearch.addAllDocuments(req, res, payload);
+    ElasticSearch.addAllDocuments(req, res, newPayload);
     return null; 
 });
 
