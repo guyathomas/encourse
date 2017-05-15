@@ -15,7 +15,7 @@ dependencies:
     - docker build --rm=false -t stolemyusername/encourse-scraper:latest ./scraper
     - docker push stolemyusername/encourse-scraper:latest
     #Push new elasticserver
-    - docker build --rm=false -t stolemyusername/encourse-esserver:latest ./elasticsearch
+    - docker build --rm=false -t stolemyusername/encourse-elasticserver:latest ./elasticsearch
     - docker push stolemyusername/encourse-elasticserver:latest
 # test:
 #   override:
