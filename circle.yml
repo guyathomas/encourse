@@ -16,7 +16,7 @@ dependencies:
     - docker push stolemyusername/encourse-scraper:latest
     #Push new elasticserver
     - docker build --rm=false -t stolemyusername/encourse-esserver:latest ./elasticsearch
-    - docker push stolemyusername/encourse-esserver:latest
+    - docker push stolemyusername/encourse-elasticserver:latest
 # test:
 #   override:
 #     - docker run -d -p 9200:9200 stolemyusername/encourse; sleep 10
