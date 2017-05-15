@@ -82,6 +82,7 @@ module.exports = {
 
 	// 4.b. Add/Update all documents
 	addAllDocuments: function(req, res, payload){
+		console.log('This is the final request', payload)
 	    elasticClient.bulk({
 	        body: payload
 	    }).then(function (resp) {

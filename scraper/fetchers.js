@@ -35,8 +35,9 @@ const addToDB = function (payload, platform) {
 exports.udemy = function (req, res) {
 	// const topic = req.params.topic ? [req.params.topic] : ["Academics","Business","Design","Development","Health & Fitness","IT & Software","Language","Lifestyle","Marketing","Music","Office Productivity","Personal Development","Photography","Teacher Training","Test Prep"]
 	const topic = req.params.topic;
-	const pageSize = 3;
-	const pageCount = 2;
+	const pageSize = 100;
+	const pageCount = 3;
+	const progress = [];
 	axios.get(`https://www.udemy.com/api-2.0/courses?page_size=1&language=en&ordering=highest-rated&category=${topic}`, {
 		withCredentials: true,
 		    auth: {
@@ -48,7 +49,7 @@ exports.udemy = function (req, res) {
 		//Create all of the promises for the requests
 		const apiQueries = [];
 		const pagesInAPI = Math.ceil(parseInt(initRes.data.count) / pageSize)
-		console.log('It would have scraped ', pagesInAPI, 'pages')
+		// console.log('It would have scraped ', pagesInAPI, 'pages')
 		for (let currPage = 0; currPage < pageCount; currPage++) {
 			apiQueries.push(scrape.udemyAPI(currPage, pageSize, topic))
 		}
@@ -56,6 +57,7 @@ exports.udemy = function (req, res) {
 	})
 	.then((apiQueries) => {
 		Promise.each(apiQueries, (result, index, length) => {
+			console.log('Started the new API query')
 			const pageData = result.data.results;
 
 			//Strip the results down to only the data I need
@@ -67,7 +69,7 @@ exports.udemy = function (req, res) {
 			//Prepare to scrape every page in the API response
 			const scrapeRequests = [];
 			for (let i = 0; i < shortData.length; i++) {
-				const pageReq = scrape.udemyPage(shortData[i].link, i ,shortData.length);
+				const pageReq = scrape.udemyPage(shortData[i].link, i ,shortData.length, index);
 				scrapeRequests.push(pageReq)
 			}
 
@@ -78,6 +80,8 @@ exports.udemy = function (req, res) {
 					shortData[i].description = format.truncate(webPage[0]);
 					shortData[i].learnings = webPage[1];
 					shortData[i].duration = webPage[2];
+					progress[index] = progress[index] ? progress[index] + 1 : 1
+					console.log(progress)
 				})
 				return shortData;
 			})

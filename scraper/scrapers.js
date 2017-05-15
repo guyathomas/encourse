@@ -4,7 +4,7 @@ const Promise = require("bluebird");
 const axios = require('axios');
 
 module.exports = {
-    udemyPage: function(url, progress, total) {
+    udemyPage: function(url, progress, total, set) {
         return new Promise((resolve, reject) => {
             request(url, function(error, response, html) {
                 if (!error && response.statusCode == 200) {
@@ -28,7 +28,7 @@ module.exports = {
                             duration = $(element).text().split('\n').map((el) => (el.trim())).filter((el) => (el != ''))[0]
                         }
                     });
-                    console.log('Processed', (progress - 1) / 2, 'out of', total / 2)
+                    console.log('Processed', progress, 'out of', total, 'in set', set)
                     resolve([description, learnings, duration])
                 } else {
                     reject(error)

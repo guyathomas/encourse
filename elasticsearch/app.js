@@ -24,7 +24,8 @@ app.use('/*', (req, res) => {res.status(404).send('Route not found')})
 // app.post('/search', handler.filteredCourses);
 
 //Initialize es
-// ElasticSearch.client.indices.create({ index: 'courses' })
+// const deleteAll = ElasticSearch.client.indices.create({ index: 'courses' }).bind(this)
+// setTimeout(deleteAll, 1000)
 
 //Set up listening
 app.listen(port, function () {
