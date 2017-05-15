@@ -5,7 +5,7 @@ exports.truncate = function(description, length = 350) {
 	return description;
 }
 
-exports.udemy = function (rawCoursePage, category, callback) {
+exports.udemy = function (rawCoursePage, category) {
 	const courses = [];
 	for (var i = 0; i < rawCoursePage.length; i++) {
 		var shortCourse = {};
@@ -23,7 +23,7 @@ exports.udemy = function (rawCoursePage, category, callback) {
 		courses.push(shortCourse);
 
 	}
-	callback(courses);
+	return courses;
 }
 
 exports.coursera = function (rawCoursePage, callback) {

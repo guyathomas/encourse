@@ -28,7 +28,7 @@ module.exports = {
                             duration = $(element).text().split('\n').map((el) => (el.trim())).filter((el) => (el != ''))[0]
                         }
                     });
-                    console.log('Processed', progress, 'out of', total, 'in set', set)
+                    // console.log('Processed', progress, 'out of', total, 'in set', set)
                     resolve([description, learnings, duration])
                 } else {
                     reject(error)

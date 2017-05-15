@@ -6,7 +6,7 @@ const scrape = require('./scrapers')
 //TODO: inmplement truncate that limits the descriptions to 200 characters
 
 const addToDB = function (payload, platform) {
-	console.log('The payload to be posted', payload.length, 'items', JSON.stringify(payload.slice(0,10)))
+	console.log('The payload to be posted', payload.length, 'items', JSON.stringify(payload))
 	axios.post('http://elasticserver:9199/elastic/addAll', {
         "payload": payload,
         "platform": platform
@@ -15,30 +15,13 @@ const addToDB = function (payload, platform) {
   		console.log('Courses have been added to the DB')
   	})
   	.catch((err) => {
-  		console.log('The error in posting the payload to the db')
+  		console.log('The error in posting the payload to the db', err)
   		// res.status(400).send('Error adding to DB')
   	})
 }
-
-
-
-	//Query the API to get the number of pages
-	//Then for all of the possible query requests
-		//Request the page => Array of all the objects
-		//Then for each object
-			//Create a barebones object
-			//Iterate over that object
-				//Query every URL
-				//Scrape Page
-				//Then post to db
-
-exports.udemy = function (req, res) {
-	// const topic = req.params.topic ? [req.params.topic] : ["Academics","Business","Design","Development","Health & Fitness","IT & Software","Language","Lifestyle","Marketing","Music","Office Productivity","Personal Development","Photography","Teacher Training","Test Prep"]
-	const topic = req.params.topic;
-	const pageSize = 100;
-	const pageCount = 3;
-	const progress = [];
-	axios.get(`https://www.udemy.com/api-2.0/courses?page_size=1&language=en&ordering=highest-rated&category=${topic}`, {
+const getUdemyAPIQueries = async function (topic, pageSize, pageCount) {
+	//Will return an array of promises for all of the API calls
+	return axios.get(`https://www.udemy.com/api-2.0/courses?page_size=1&language=en&ordering=highest-rated&category=${topic}`, {
 		withCredentials: true,
 		    auth: {
 		      username: process.env.UDEMY_USERNAME,
@@ -46,59 +29,46 @@ exports.udemy = function (req, res) {
 		    }
 	})
 	.then((initRes) => {
-		//Create all of the promises for the requests
 		const apiQueries = [];
 		const pagesInAPI = Math.ceil(parseInt(initRes.data.count) / pageSize)
-		// console.log('It would have scraped ', pagesInAPI, 'pages')
 		for (let currPage = 0; currPage < pageCount; currPage++) {
 			apiQueries.push(scrape.udemyAPI(currPage, pageSize, topic))
 		}
 		return apiQueries
 	})
-	.then((apiQueries) => {
-		Promise.each(apiQueries, (result, index, length) => {
-			console.log('Started the new API query')
-			const pageData = result.data.results;
+}
 
-			//Strip the results down to only the data I need
-			let shortData;
-			format.udemy(pageData, topic, (cleanData) => {
-				shortData = cleanData;
-			})
+const scrapeUdemyPage = async function (shortData) {
+	const newData = await scrape.udemyPage(shortData.link)
+	shortData.description = format.truncate(newData[0]);
+	shortData.learnings = newData[1];
+	shortData.duration = newData[2];
+	return shortData;
+}
 
-			//Prepare to scrape every page in the API response
-			const scrapeRequests = [];
-			for (let i = 0; i < shortData.length; i++) {
-				const pageReq = scrape.udemyPage(shortData[i].link, i ,shortData.length, index);
-				scrapeRequests.push(pageReq)
-			}
+exports.udemy = async function (req, res) {
+	// const topic = req.params.topic ? [req.params.topic] : ["Academics","Business","Design","Development","Health & Fitness","IT & Software","Language","Lifestyle","Marketing","Music","Office Productivity","Personal Development","Photography","Teacher Training","Test Prep"]
+	const topic = req.params.topic;
+	const apiQueries = await getUdemyAPIQueries(topic, 100, 2);
+	const progress = [];
+	const parallelScrapes = 10;
+	// console.log('apiQueries', apiQueries)
 
-			//Process scraping all those pages
-			Promise.all(scrapeRequests)
-			.then((webPages) => {
-				webPages.forEach((webPage, i) => {
-					shortData[i].description = format.truncate(webPage[0]);
-					shortData[i].learnings = webPage[1];
-					shortData[i].duration = webPage[2];
-					progress[index] = progress[index] ? progress[index] + 1 : 1
-					console.log(progress)
-				})
-				return shortData;
-			})
-			.then((completeData) => {
-				addToDB(completeData, 'udemy');
-				console.log('Completed the request to add data.')
-			})
-			.catch((err) => {
-				console.log('Error in posting data to elastic server')
-			})
-		})
-	})
-	.catch((err) => {
-		console.log('Err either making the scrape requests or adding to DB')
-	})
-
-
+	for (var i = 0; i < apiQueries.length; i++) {
+		// console.log('API Page',i);
+		let pageData = await apiQueries[i];
+		pageData = pageData.data.results
+		// console.log('pageData.data', pageData)
+		const shortData = format.udemy(pageData, topic);
+		const finalArr = [];
+		for (var j = 0; j < shortData.length; j++) {
+			const finalItem = await scrapeUdemyPage(shortData[j])
+			finalArr.push(finalItem)
+			progress[i] = progress[i] ? progress[i] + 1 : 1;
+			console.log(progress);
+		}
+		addToDB(finalArr, 'udemy');
+	}
 }
 // exports.udemy = function(req, res) {
 

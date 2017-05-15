@@ -1,5 +1,5 @@
 # Dockerfile
-FROM node:6
+FROM node:7.10
 
 # Create app directory
 RUN mkdir -p /usr/src/app
