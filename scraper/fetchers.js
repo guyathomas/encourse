@@ -80,9 +80,7 @@ exports.udemy = async function (req, res) {
 	const getCoursePages = (start, end, shortData, cb) => {
 		const results = [];
 		for (var i = start; i < end; i++) {
-			console.log('ID comp:', shortData[i].platformID, newestCache.udemy[topic])
 			if (shortData[i].platformID === newestCache.udemy[topic]) {
-				console.log('FOUND THE MOST RECENT')
 				break;
 			} else {
 				results.push(shortData[i])
@@ -105,11 +103,7 @@ exports.udemy = async function (req, res) {
 			progress[i] = progress[i] ? (progress[i] + parallelScrapes) : parallelScrapes;
 			console.log(progress);
 			addToDB(finalData, 'udemy');
-			console.log('Length of results:', coursePages.length)
-			if (coursePages.length < parallelScrapes) {
-				foundEnd = true;
-				break;
-			}
+			if (coursePages.length < parallelScrapes) { foundEnd = true; }
 		}
 	}
 	newestCache.udemy[topic] = newestID;
