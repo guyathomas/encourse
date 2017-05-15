@@ -151,7 +151,7 @@ exports.udacity = function() {
 	 axios.get('https://www.udacity.com/public-api/v0/courses')
 	 .then(function(res) {
 		var data = res.data.courses;
-		const formattedCourses = format.udacity(data)
+		const formattedCourses = format.udacity(data, 'udacity')
 	 	return formattedCourses;
 	 })
 	 .then(function(courseArr) {
@@ -193,7 +193,7 @@ exports.coursera = function() {
 			axios.get(`https://api.coursera.org/api/courses.v1?start=${queryPage}&limit=100&fields=description,photoUrl,previewLink,workload,startDate,specializations,primaryLanguages`)
 			.then((result) => {
 				const pageData = result.data.elements;
-				formatCoursera(pageData, (cleanData) => {
+				format.coursera(pageData, (cleanData) => {
 					addToDB(courseArr)
 				})
 			})

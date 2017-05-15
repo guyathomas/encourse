@@ -14,9 +14,9 @@ routes.get('/udacityNano', (req, res) => {
 routes.get('/coursera', (req, res) => {
 	fetchers.coursera(req, res);
 });
-routes.get('/edx', (req, res) => {
-	fetchers.edx(req, res);
-});
+// routes.get('/edx', (req, res) => {
+// 	fetchers.edx(req, res);
+// });
 
 
 module.exports = routes;
