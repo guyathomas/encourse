@@ -8,7 +8,7 @@
       {
         "name": "esdata",
         "host": {
-          "sourcePath": "data/esdata/"
+          "sourcePath": "/data/esdata/"
         }
       }
     ],
