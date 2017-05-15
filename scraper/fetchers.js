@@ -3,6 +3,10 @@ const axios = require('axios');
 const format = require('./format')
 const scrape = require('./scrapers')
 
+const newestCache = {
+	"udemy" : 643130
+};
+
 //TODO: inmplement truncate that limits the descriptions to 200 characters
 
 const addToDB = function (payload, platform) {
@@ -21,7 +25,7 @@ const addToDB = function (payload, platform) {
 }
 const getUdemyAPIQueries = async function (topic, pageSize, pageCount) {
 	//Will return an array of promises for all of the API calls
-	return axios.get(`https://www.udemy.com/api-2.0/courses?page_size=1&language=en&ordering=highest-rated&category=${topic}`, {
+	return axios.get(`https://www.udemy.com/api-2.0/courses?page_size=1&language=en&ordering=newest&category=${topic}`, {
 		withCredentials: true,
 		    auth: {
 		      username: process.env.UDEMY_USERNAME,
@@ -31,7 +35,7 @@ const getUdemyAPIQueries = async function (topic, pageSize, pageCount) {
 	.then((initRes) => {
 		const apiQueries = [];
 		const pagesInAPI = Math.ceil(parseInt(initRes.data.count) / pageSize)
-		for (let currPage = 0; currPage < pageCount; currPage++) {
+		for (let currPage = 0; currPage < pagesInAPI; currPage++) {
 			apiQueries.push(scrape.udemyAPI(currPage, pageSize, topic))
 		}
 		return apiQueries
@@ -63,88 +67,53 @@ const scrapeUdemyPages = async function (shortData) {
 }
 
 exports.udemy = async function (req, res) {
+	// console.log('Recieved request')
 	// const topic = req.params.topic ? [req.params.topic] : ["Academics","Business","Design","Development","Health & Fitness","IT & Software","Language","Lifestyle","Marketing","Music","Office Productivity","Personal Development","Photography","Teacher Training","Test Prep"]
 	const topic = req.params.topic;
 	const apiQueries = await getUdemyAPIQueries(topic, 100, 2);
 	const progress = [];
 	const parallelScrapes = 5;
+	let newestID;
+	let foundEnd = false;
 	// console.log('apiQueries', apiQueries)
+	
+	const getCoursePages = (start, end, shortData, cb) => {
+		const results = [];
+		for (var i = start; i < end; i++) {
+			console.log('ID comp:', shortData[i].platformID, newestCache.udemy)
+			if (shortData[i].platformID === newestCache.udemy) {
+				console.log('FOUND THE MOST RECENT')
+				break;
+			} else {
+				results.push(shortData[i])
+			}
+		}
+		return results;
+	}
 
-	for (var i = 0; i < apiQueries.length; i++) {
-		// console.log('API Page',i);
+	for (var i = 0; i < apiQueries.length && !foundEnd; i++) {
 		let pageData = await apiQueries[i];
 		pageData = pageData.data.results
-		// console.log('pageData.data', pageData)
+		//Store the newest course ID in the temp cache to update after all queriest
+		if (i === 0) { newestID = pageData[0].id; }
+
 		const shortData = format.udemy(pageData, topic);
-		for (var j = 0; j < shortData.length; j += parallelScrapes) {
-			const finalData = await scrapeUdemyPages(shortData.slice(j, j + parallelScrapes))
-			// finalArr.push(finalItem)
-			progress[i] = progress[i] ? progress[i] + parallelScrapes : parallelScrapes;
+		for (var j = 0; j < shortData.length && !foundEnd; j += parallelScrapes) {
+			const coursePages = getCoursePages(j, j + parallelScrapes, shortData);
+			const finalData = await scrapeUdemyPages(coursePages);
+
+			progress[i] = progress[i] ? (progress[i] + parallelScrapes) : parallelScrapes;
 			console.log(progress);
 			addToDB(finalData, 'udemy');
+			console.log('Length of results:', coursePages.length)
+			if (coursePages.length < parallelScrapes) {
+				foundEnd = true;
+				break;
+			}
 		}
 	}
+	newestCache.udemy = newestID;
 }
-// exports.udemy = function(req, res) {
-
-// 	let topics;
-// 	let pageCount = 2;
-// 	const pageSize = 2;
-// 	if (req.params.courseType) {
-// 		topics = [req.params.courseType]
-// 	} else {
-		
-// 	}
-// 	console.log('Recieved the scrape request');
-// 	topics.forEach((topic) => {
-// 		//Determine how many requests will need to be made
-
-
-// 					// console.log('Will make the API request with', 'currPage', currPage, 'pageSize', pageSize)
-// 					axios.get(`https://www.udemy.com/api-2.0/courses?page=${currPage}&page_size=${pageSize}&language=en&ordering=highest-rated&category=${topic}`, {
-// 						withCredentials: true,
-// 						    auth: {
-// 						      username: process.env.UDEMY_USERNAME,
-// 						      password: process.env.UDEMY_PASSWORD
-// 						    }
-// 					})
-// 					.catch((err) => {console.log('Error in requestion page ' + currPage, err)})
-// 					.then((page) => {
-// 						console.log('Made the API request with', 'currPage', currPage, 'pageSize', pageSize)
-// 						let data;
-// 						const pageData = page.data.results;
-// 						format.udemy(pageData, topic, (cleanData) => {
-// 							data = cleanData;
-// 						})
-// 						console.log('TEST: the output of udemy', data)
-// 						return data
-// 					})
-// 					.catch((err) => {console.log('Error in formatting the data', err)})
-// 					.then((cleanData) => {
-// 						for (let i = 1; i < cleanData.length; i+= 2) {
-// 							scrape.udemy(cleanData[i].link, i ,cleanData.length)
-// 							.then((page) => {
-// 								cleanData[i].description = format.truncate(page[0]);
-// 								cleanData[i].learnings = page[1];
-// 								cleanData[i].duration = page[2];
-// 								return cleanData;
-// 							})
-// 							.then((completeData) => {
-// 								addToDB(completeData)
-// 							})
-// 							.catch((err) => {console.log('Error in scraping the page', cleanData, err)})
-// 						}
-// 					})
-// 					.catch((err) => {console.log('Error in formatting the data', err)})
-// 				}
-// 		})
-// 		.catch((err) => {
-// 			console.log('Error in initial request', err)
-// 			// res.status(400).send('Error in scrape')
-// 		})
-// 	})
-// 	.then(() => res.status(200).send('Scrape complete'))
-// }
 
 exports.udacity = function() {
 	//Get the data from Udacities API and convert into format for our database
