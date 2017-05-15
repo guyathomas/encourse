@@ -6,7 +6,7 @@ module.exports = {
 			newData.push({ "index" : { "_index" : index, "_type" : platform }});
 			newData.push(data[i]);
 		}
-		console.log('AFter adding the instructions', newData)
+		// console.log('AFter adding the instructions', newData)
 		return newData;
 	}
 }

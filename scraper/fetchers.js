@@ -6,7 +6,7 @@ const scrape = require('./scrapers')
 //TODO: inmplement truncate that limits the descriptions to 200 characters
 
 const addToDB = function (payload, platform) {
-	console.log('The payload to be posted', payload.length, 'items', JSON.stringify(payload))
+	// console.log('The payload to be posted', payload.length, 'items', JSON.stringify(payload))
 	axios.post('http://elasticserver:9199/elastic/addAll', {
         "payload": payload,
         "platform": platform
@@ -15,7 +15,7 @@ const addToDB = function (payload, platform) {
   		console.log('Courses have been added to the DB')
   	})
   	.catch((err) => {
-  		console.log('The error in posting the payload to the db', err)
+  		console.log('The error in posting the payload to the db')
   		// res.status(400).send('Error adding to DB')
   	})
 }
@@ -38,12 +38,28 @@ const getUdemyAPIQueries = async function (topic, pageSize, pageCount) {
 	})
 }
 
-const scrapeUdemyPage = async function (shortData) {
-	const newData = await scrape.udemyPage(shortData.link)
-	shortData.description = format.truncate(newData[0]);
-	shortData.learnings = newData[1];
-	shortData.duration = newData[2];
-	return shortData;
+const scrapeUdemyPages = async function (shortData) {
+	const scrapeRequests = [];
+	for (var i = 0; i < shortData.length; i++) {
+		const request = scrape.udemyPage(shortData[i].link)
+		scrapeRequests.push(request);
+	}
+
+	return Promise.all(scrapeRequests)
+	.then((pages) => {
+		for (var i = 0; i < pages.length; i++) {
+			const newData = pages[i];
+			shortData[i].description = format.truncate(newData[0]);
+			shortData[i].learnings = newData[1];
+			shortData[i].duration = newData[2];
+		}
+		return shortData;
+	})
+	// GO through and add scrape requests to array
+	//Run promise all and augment the existing data
+	//
+
+	// return shortData;
 }
 
 exports.udemy = async function (req, res) {
@@ -51,7 +67,7 @@ exports.udemy = async function (req, res) {
 	const topic = req.params.topic;
 	const apiQueries = await getUdemyAPIQueries(topic, 100, 2);
 	const progress = [];
-	const parallelScrapes = 10;
+	const parallelScrapes = 5;
 	// console.log('apiQueries', apiQueries)
 
 	for (var i = 0; i < apiQueries.length; i++) {
@@ -60,14 +76,13 @@ exports.udemy = async function (req, res) {
 		pageData = pageData.data.results
 		// console.log('pageData.data', pageData)
 		const shortData = format.udemy(pageData, topic);
-		const finalArr = [];
-		for (var j = 0; j < shortData.length; j++) {
-			const finalItem = await scrapeUdemyPage(shortData[j])
-			finalArr.push(finalItem)
-			progress[i] = progress[i] ? progress[i] + 1 : 1;
+		for (var j = 0; j < shortData.length; j += parallelScrapes) {
+			const finalData = await scrapeUdemyPages(shortData.slice(j, j + parallelScrapes))
+			// finalArr.push(finalItem)
+			progress[i] = progress[i] ? progress[i] + parallelScrapes : parallelScrapes;
 			console.log(progress);
+			addToDB(finalData, 'udemy');
 		}
-		addToDB(finalArr, 'udemy');
 	}
 }
 // exports.udemy = function(req, res) {

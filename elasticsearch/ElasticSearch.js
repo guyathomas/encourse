@@ -73,7 +73,8 @@ module.exports = {
 	        body: payload
 	    }).then(function (resp) {
 	        res.status(200);
-	        return res.json(resp)
+	        return res.send();
+	        // return res.json(resp)
 	    }, function (err) {
 	        res.status(500)
 	        return res.json(err)
@@ -82,7 +83,7 @@ module.exports = {
 
 	// 4.b. Add/Update all documents
 	addAllDocuments: function(req, res, payload){
-		console.log('This is the final request', payload)
+		// console.log('This is the final request', payload)
 	    elasticClient.bulk({
 	        body: payload
 	    }).then(function (resp) {
