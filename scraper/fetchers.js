@@ -4,7 +4,7 @@ const format = require('./format')
 const scrape = require('./scrapers')
 
 const newestCache = {
-	"udemy" : 643130
+	"udemy" : {}
 };
 
 //TODO: inmplement truncate that limits the descriptions to 200 characters
@@ -80,8 +80,8 @@ exports.udemy = async function (req, res) {
 	const getCoursePages = (start, end, shortData, cb) => {
 		const results = [];
 		for (var i = start; i < end; i++) {
-			console.log('ID comp:', shortData[i].platformID, newestCache.udemy)
-			if (shortData[i].platformID === newestCache.udemy) {
+			console.log('ID comp:', shortData[i].platformID, newestCache.udemy[topic])
+			if (shortData[i].platformID === newestCache.udemy[topic]) {
 				console.log('FOUND THE MOST RECENT')
 				break;
 			} else {
@@ -112,7 +112,7 @@ exports.udemy = async function (req, res) {
 			}
 		}
 	}
-	newestCache.udemy = newestID;
+	newestCache.udemy[topic] = newestID;
 }
 
 exports.udacity = function() {
