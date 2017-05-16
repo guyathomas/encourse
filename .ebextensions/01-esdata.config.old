@@ -5,4 +5,4 @@ container_commands:
   02setowner:
     command: "chown $USER -R /data; echo Changeowner"
   03setperms:
-    command: "sudo chmod 755 /data; echo Setperms"
+    command: "sudo chmod 755 -R /data; echo Setperms"

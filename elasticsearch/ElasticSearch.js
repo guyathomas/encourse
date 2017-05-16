@@ -1,10 +1,20 @@
 //Referenced from: https://medium.com/@siddharthac6/elasticsearch-node-js-b16ea8bec427
 var elasticsearch = require('elasticsearch');
-var elasticClient = new elasticsearch.Client({
-  	host: 'elastic:9200',
-  	log: 'trace',
-  	httpAuth: 'elastic:changeme'
-});
+let elasticClient;
+
+if (process.env.NODE_ENV === 'production') {
+	console.log('Ran in prod mode', new Date())
+	elasticClient = new elasticsearch.Client({
+	  	host: process.env.ES_ENDPOINT,
+	  	log: 'trace'
+	});
+} else {
+	elasticClient = new elasticsearch.Client({
+	  	host: 'elastic:9200',
+	  	log: 'trace',
+	  	httpAuth: 'elastic:changeme'
+	});
+}
 
 module.exports = {
 	client: elasticClient,

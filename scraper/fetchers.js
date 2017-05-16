@@ -120,10 +120,10 @@ exports.udacity = function() {
 	 .then(function(courseArr) {
 	 	addToDB(courseArr, 'udacity')
 	 })
-	 .then(() => res.status(200).send('Scrape complete'))
+	 // .then(() => res.status(200).send('Scrape complete'))
 	 .catch(function(err) {
 	 	console.log('there was an creating/fetching udacity', err);
-	 	res.status(400).send('Error in scrape')
+	 	// res.status(400).send('Error in scrape')
 	 })
 }
 
@@ -138,10 +138,10 @@ exports.udacityNano = function() {
 	 .then(function(courseArr) {
 	 	addToDB(courseArr, 'udacity nanodegree')
 	 })
-	 .then(() => res.status(200).send('Scrape complete'))
+	 // .then(() => res.status(200).send('Scrape complete'))
 	 .catch(function(err) {
 	 	console.log('there was an error creating/fetching udacity', err);
-	 	res.status(400).send('Error in scrape')
+	 	// res.status(400).send('Error in scrape')
 	 })
 }
 
@@ -157,7 +157,7 @@ exports.coursera = function() {
 			.then((result) => {
 				const pageData = result.data.elements;
 				format.coursera(pageData, (cleanData) => {
-					addToDB(courseArr)
+					addToDB(cleanData, 'coursera')
 				})
 			})
 			.catch((err) => {
@@ -165,9 +165,9 @@ exports.coursera = function() {
 			})
 		}
 	})
-	.then(() => res.status(200).send('Scrape complete'))
+	// .then(() => res.status(200).send('Scrape complete'))
 	.catch((err) => {
 		console.log('Error in getting number of courses', err);
-		res.status(400).send('Error in scrape')
+		// res.status(400).send('Error in scrape')
 	})
 }

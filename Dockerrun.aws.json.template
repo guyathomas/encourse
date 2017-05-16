@@ -4,14 +4,6 @@
     "Bucket": "encourse-bucket",
     "Key": "docker/dockercfg"
   },
-  "volumes": [
-      {
-        "name": "esdata",
-        "host": {
-          "sourcePath": "/data/esdata/"
-        }
-      }
-    ],
     "containerDefinitions": [
     {
       "name": "web",
@@ -29,24 +21,6 @@
         "scraper"
       ],
       "mountPoints": [
-      ]
-    },
-    {
-      "name": "elastic",
-      "image": "docker.elastic.co/elasticsearch/elasticsearch:5.4.0",
-      "essential": true,
-      "memory": 128,
-      "portMappings": [
-        {
-          "hostPort": 9200,
-          "containerPort": 9200
-        }
-      ],
-      "mountPoints": [
-        {
-          "sourceVolume": "esdata",
-          "containerPath": "/usr/share/elasticsearch/data"
-        }
       ]
     },
     {
@@ -78,7 +52,6 @@
         }
       ],
       "links": [
-        "elastic"
       ],
       "mountPoints": [
       ]
