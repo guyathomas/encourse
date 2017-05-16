@@ -18,7 +18,7 @@ zip -r $SHA1.zip $DOCKERRUN_FILE $EBEXTENSIONS
 aws s3 cp $SHA1.zip s3://$EB_BUCKET/$SHA1.zip
 
 aws elasticbeanstalk create-application-version --application-name encourse-app \
-  --version-label $SHA1 --source-bundle S3Bucket=$EB_BUCKET,S3Key=$DOCKERRUN_FILE
+  --version-label $SHA1 --source-bundle S3Bucket=$EB_BUCKET,S3Key=$SHA1.zip
 
 # Update Elastic Beanstalk environment to new version
 aws elasticbeanstalk update-environment --environment-name encourse-prod \
